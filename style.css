@@ -125,3 +125,13 @@ footer{border-top:1px solid var(--line);padding-block:24px;font-size:13px;color:
 /* ===== الشعار ===== */
 .brand{align-items:center}
 .logo{width:44px;height:auto}
+/* ===== تحسينات التلفون ===== */
+@media (max-width:640px){
+  .brand{gap:8px;padding-block:10px}
+  .logo{width:38px}
+  .brand b{font-size:26px}
+  .brand span{font-size:11px}
+  .hero h1{font-size:34px}
+  .tools{flex-direction:column}
+  .search,.sort{width:100%}
+}
