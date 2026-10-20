@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>صوفيه لمستحضرات التجميل</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@600&family=Tajawal:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <div class="wrap brand"><b>صوفيه</b><span>لمستحضرات التجميل</span></div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>جمالك <em>بلمسة</em> صوفيه</h1>
+      <p>تصفّحي منتجاتنا وأسعارها، واطلبي أي منتج مباشرة على الواتساب.</p>
+      <div class="contact">واتساب: <b id="phone"></b> <a id="wa" class="wa-btn" target="_blank">راسلينا</a></div>
+    </section>
+
+    <!-- البحث والترتيب -->
+    <div class="tools">
+      <input class="search" id="search" type="search" placeholder="🔍 ابحثي عن منتج...">
+      <select class="sort" id="sort">
+        <option value="new">الترتيب: الأحدث</option>
+        <option value="low">السعر: من الأرخص</option>
+        <option value="high">السعر: من الأغلى</option>
+      </select>
+    </div>
+
+    <div class="chips" id="chips"></div>
+    <section class="grid" id="grid"></section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="social" id="social"></div>
+      صوفيه لمستحضرات التجميل · الأسعار بالدينار الليبي
+    </div>
+  </footer>
+
+  <!-- نافذة تفاصيل المنتج -->
+  <dialog id="details">
+    <button class="close" id="close" aria-label="إغلاق">×</button>
+    <div id="detailsBody"></div>
+  </dialog>
+
+  <script src="products.js"></script>
+  <script>
+    let current = "الكل";   // الفئة المختارة
+    let searchText = "";    // نص البحث
+    let sortBy = "new";     // طريقة الترتيب
+
+    // ===== رابط واتساب =====
+    const waNumber = PHONE.replace(/[^0-9]/g, "");
+    function waLink(text) {
+      return "https://wa.me/" + waNumber + (text ? "?text=" + encodeURIComponent(text) : "");
+    }
+    function orderLink(p) {
+      return waLink("مرحباً، أبي أطلب: " + p.name + " – " + p.price + " د.ل");
+    }
+    document.getElementById("phone").textContent = PHONE;
+    document.getElementById("wa").href = waLink("");
+
+    // ===== روابط انستغرام وتيك توك =====
+    let social = "";
+    if (INSTAGRAM) social += `<a href="${INSTAGRAM}" target="_blank">انستغرام</a>`;
+    if (TIKTOK) social += `<a href="${TIKTOK}" target="_blank">تيك توك</a>`;
+    document.getElementById("social").innerHTML = social;
+
+    // ===== صورة المنتج (وإذا ما فيه صورة يظهر أول حرف) =====
+    function picture(p) {
+      return `<img src="images/${p.image}" alt="${p.name}"
+                   onerror="this.outerHTML='<span class=letter>${p.name[0]}</span>'">`;
+    }
+
+    // ===== السعر (مع التخفيض إذا موجود) =====
+    function priceHTML(p) {
+      let html = `<span class="price">${p.price} <small>د.ل</small></span>`;
+      if (p.oldPrice > p.price) html += ` <s class="old">${p.oldPrice}</s>`;
+      return html;
+    }
+
+    // ===== الشارات (جديد / تخفيض / نفدت) =====
+    function badges(p) {
+      let html = "";
+      if (p.soldOut) html += `<span class="badge out">نفدت الكمية</span>`;
+      else if (p.oldPrice > p.price) html += `<span class="badge sale">تخفيض</span>`;
+      if (p.isNew) html += `<span class="badge new">جديد</span>`;
+      return `<div class="badges">${html}</div>`;
+    }
+
+    // ===== زر الطلب =====
+    function orderButton(p) {
+      if (p.soldOut) return `<span class="order disabled">غير متوفر حالياً</span>`;
+      return `<a class="order" href="${orderLink(p)}" target="_blank" onclick="event.stopPropagation()">اطلبي على واتساب</a>`;
+    }
+
+    // ===== أزرار الفئات =====
+    function showChips() {
+      const cats = ["الكل", ...new Set(PRODUCTS.map(p => p.category))];
+      document.getElementById("chips").innerHTML = cats.map(c =>
+        `<button class="chip ${c === current ? "active" : ""}" data-cat="${c}">${c}</button>`
+      ).join("");
+    }
+    document.getElementById("chips").addEventListener("click", e => {
+      const btn = e.target.closest(".chip");
+      if (!btn) return;
+      current = btn.dataset.cat;
+      showChips();
+      showProducts();
+    });
+
+    // ===== بطاقات المنتجات =====
+    function showProducts() {
+      let list = PRODUCTS
+        .map((p, i) => ({ ...p, index: i }))
+        .filter(p =>
+          (current === "الكل" || p.category === current) &&
+          p.name.includes(searchText)
+        );
+
+      if (sortBy === "low") list.sort((a, b) => a.price - b.price);
+      if (sortBy === "high") list.sort((a, b) => b.price - a.price);
+      if (sortBy === "new") list.reverse(); // آخر منتج تضيفه يظهر أول
+
+      if (list.length === 0) {
+        document.getElementById("grid").innerHTML = `<p class="empty">ما فيه منتج بهذا الاسم 🙁</p>`;
+        return;
+      }
+
+      document.getElementById("grid").innerHTML = list.map(p => `
+        <article class="card ${p.soldOut ? "is-out" : ""}" data-index="${p.index}">
+          <div class="pic">${picture(p)}${badges(p)}</div>
+          <div class="info">
+            <div class="cat">${p.category}</div>
+            <h3>${p.name}</h3>
+            <div class="prices">${priceHTML(p)}</div>
+            ${orderButton(p)}
+          </div>
+        </article>`
+      ).join("");
+    }
+
+    // ===== نافذة التفاصيل لما الزبون يضغط على منتج =====
+    const dialog = document.getElementById("details");
+    document.getElementById("grid").addEventListener("click", e => {
+      const card = e.target.closest(".card");
+      if (!card) return;
+      const p = PRODUCTS[card.dataset.index];
+      document.getElementById("detailsBody").innerHTML = `
+        <div class="d-pic">${picture(p)}${badges(p)}</div>
+        <div class="d-info">
+          <div class="cat">${p.category}</div>
+          <h2>${p.name}</h2>
+          <p>${p.description || ""}</p>
+          <div class="prices">${priceHTML(p)}</div>
+          ${orderButton(p)}
+        </div>`;
+      dialog.showModal();
+    });
+    document.getElementById("close").onclick = () => dialog.close();
+    dialog.addEventListener("click", e => { if (e.target === dialog) dialog.close(); });
+
+    // ===== البحث والترتيب =====
+    document.getElementById("search").addEventListener("input", e => {
+      searchText = e.target.value.trim();
+      showProducts();
+    });
+    document.getElementById("sort").addEventListener("change", e => {
+      sortBy = e.target.value;
+      showProducts();
+    });
+
+    showChips();
+    showProducts();
+  </script>
+</body>
+</html>
