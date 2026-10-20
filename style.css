@@ -122,3 +122,6 @@ footer{border-top:1px solid var(--line);padding-block:24px;font-size:13px;color:
 }
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ===== الشعار ===== */
+.brand{align-items:center}
+.logo{width:44px;height:auto}
