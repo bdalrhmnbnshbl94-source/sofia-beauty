@@ -1,11 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-  <path d="M20 112 V52 A40 40 0 0 1 100 52 V112 Z" fill="#F8E6EC" stroke="#B03A6B" stroke-width="4"/>
-  <path d="M28 106 V54 A32 32 0 0 1 92 54 V106" fill="none" stroke="#C49A5A" stroke-width="1.5" opacity=".7"/>
-  <rect x="46" y="78" width="28" height="26" rx="3" fill="#C49A5A"/>
-  <rect x="46" y="76" width="28" height="5" rx="2" fill="#A97E42"/>
-  <rect x="50" y="56" width="20" height="21" rx="2" fill="#B03A6B"/>
-  <path d="M50 57 V40 Q50 34 56 32 L70 26 V57 Z" fill="#D2577F"/>
-  <path d="M54 54 V42 Q54 38 57 37" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/>
-  <path d="M88 22 L91 30 L99 33 L91 36 L88 44 L85 36 L77 33 L85 30 Z" fill="#C49A5A"/>
-  <circle cx="34" cy="38" r="2.5" fill="#C49A5A"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 228">
+  <!-- خصلة شعر -->
+  <path d="M60 46 C130 6 190 70 250 34 S350 6 380 24" fill="none" stroke="#C49A5A" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M80 56 C140 22 200 80 260 46 S360 22 386 36" fill="none" stroke="#C49A5A" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+  <!-- SOFIA -->
+  <text x="217" y="124" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="76" letter-spacing="14" fill="#B03A6B">SOFIA</text>
+  <!-- خط فاصل -->
+  <path d="M100 140 H196 M224 140 H320" stroke="#C49A5A" stroke-width="1.4"/>
+  <path d="M210 134 L215 140 L210 146 L205 140 Z" fill="#C49A5A"/>
+  <!-- العبارة -->
+  <text x="212" y="166" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="13" letter-spacing="4.5" fill="#C49A5A">COSMETICS &amp; HAIR TOOLS</text>
+  <!-- أيقونات: أحمر شفاه، سشوار، استرا -->
+  <g fill="none" stroke="#C49A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="145" y="201" width="10" height="13" rx="1.5"/>
+    <path d="M146 201 V192 L154 188 V201"/>
+    <circle cx="205" cy="196" r="7.5"/>
+    <circle cx="205" cy="196" r="2.5"/>
+    <path d="M212 192 H223 V200 H212"/>
+    <rect x="201" y="203" width="7" height="11" rx="2"/>
+    <rect x="263" y="187" width="6" height="22" rx="3" transform="rotate(-8 266 210)"/>
+    <rect x="271" y="187" width="6" height="22" rx="3" transform="rotate(8 274 210)"/>
+    <path d="M270 210 V215"/>
+  </g>
 </svg>

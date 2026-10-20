@@ -17,14 +17,14 @@
 
   <main class="wrap">
     <section class="hero">
-      <h1>جمالك <em>بلمسة</em> صوفيه</h1>
-      <p>تصفّحي منتجاتنا وأسعارها، واطلبي أي منتج مباشرة على الواتساب.</p>
-      <div class="contact">واتساب: <b id="phone"></b> <a id="wa" class="wa-btn" target="_blank">راسلينا</a></div>
+            <h1><em>صوفيه</em> لتسويق مواد الزينة</h1>
+      <p>تصفّح منتجاتنا وأسعارها، واطلب أي منتج مباشرة على الواتساب.</p>
+      <div class="contact">واتساب: <b id="phone"></b> <a id="wa" class="wa-btn" target="_blank">راسلنا</a></div>
     </section>
 
     <!-- البحث والترتيب -->
     <div class="tools">
-      <input class="search" id="search" type="search" placeholder="🔍 ابحثي عن منتج...">
+      <input class="search" id="search" type="search" placeholder="🔍 ابحث عن منتج...">
       <select class="sort" id="sort">
         <option value="new">الترتيب: الأحدث</option>
         <option value="low">السعر: من الأرخص</option>
@@ -102,7 +102,7 @@
 
     // ===== أزرار الفئات =====
     function showChips() {
-      const cats = ["الكل", ...new Set(PRODUCTS.map(p => p.category))];
+            const cats = ["الكل", ...CATEGORIES];
       document.getElementById("chips").innerHTML = cats.map(c =>
         `<button class="chip ${c === current ? "active" : ""}" data-cat="${c}">${c}</button>`
       ).join("");
