@@ -20,6 +20,17 @@ const SUBCATEGORIES = {
 
 const PRODUCTS = [
   {
+    name: "أحمر شفاه مطفي",
+    price: 45,
+    oldPrice: 60,
+    category: "فرش شعر",
+    sub: "حلا",
+    image: "lipstick.jpg",
+    description: "لون وردي ترابي، ثبات طويل طول اليوم.",
+    isNew: true,
+    soldOut: false,
+  },
+  {
     name: "ماسكارا مقاومة للماء",
     price: 60,
     oldPrice: 0,
@@ -28,16 +39,6 @@ const PRODUCTS = [
     description: "تكثيف وتطويل للرموش، لا تتكتل.",
     isNew: false,
     soldOut: false,
-  },
-  {
-    name: "كريم أساس",
-    price: 85,
-    oldPrice: 0,
-    category: "بشرة",
-    image: "foundation.jpg",
-    description: "تغطية متوسطة بلمسة نهائية طبيعية، حجم 30 مل.",
-    isNew: false,
-    soldOut: true,
   },
   {
     name: "ظل عيون",
