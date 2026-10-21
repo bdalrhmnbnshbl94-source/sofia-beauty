@@ -56,7 +56,10 @@
     let sortBy = "new";     // طريقة الترتيب
 
     // ===== رابط واتساب =====
-    const waNumber = PHONE.replace(/[^0-9]/g, "");
+        let waNumber = PHONE.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[^0-9]/g, "");
+    if (waNumber.startsWith("00")) waNumber = waNumber.slice(2);
+    if (waNumber.startsWith("2180")) waNumber = "218" + waNumber.slice(4);
+    if (waNumber.startsWith("0")) waNumber = "218" + waNumber.slice(1);
     function waLink(text) {
       return "https://wa.me/" + waNumber + (text ? "?text=" + encodeURIComponent(text) : "");
     }
