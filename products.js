@@ -70,14 +70,4 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
-  {
-    name: "ا",
-    price: 9,
-    oldPrice: 0,
-    category: "ماكينات حلاقة",
-    image: "p1792608604443.jpg",
-    description: "ت",
-    isNew: true,
-    soldOut: false,
-  },
 ];
