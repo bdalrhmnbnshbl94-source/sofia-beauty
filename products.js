@@ -19,14 +19,5 @@ const SUBCATEGORIES = {
 // description الوصف · isNew جديد؟ · soldOut نفدت الكمية؟
 
 const PRODUCTS = [
-  {
-    name: "صالون",
-    price: 500,
-    oldPrice: 0,
-    category: "ماكينات حلاقة",
-    image: "p1792609863072.jpg",
-    description: "",
-    isNew: true,
-    soldOut: false,
-  },
+
 ];
