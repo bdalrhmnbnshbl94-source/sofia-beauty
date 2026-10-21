@@ -20,16 +20,6 @@ const SUBCATEGORIES = {
 
 const PRODUCTS = [
   {
-    name: "مجفف شعر هومر 1800 وات",
-    price: 144,
-    oldPrice: 0,
-    category: "مجففات الشعر",
-    image: "p1792608944734.jpg",
-    description: "مجفف شعر هومر 1800 وات",
-    isNew: true,
-    soldOut: false,
-  },
-  {
     name: "صالون",
     price: 500,
     oldPrice: 0,
