@@ -29,4 +29,14 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
+  {
+    name: "صالون",
+    price: 500,
+    oldPrice: 0,
+    category: "ماكينات حلاقة",
+    image: "p1792609863072.jpg",
+    description: "",
+    isNew: true,
+    soldOut: false,
+  },
 ];
