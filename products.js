@@ -37,7 +37,7 @@ const PRODUCTS = [
     image: "p1792609863072.jpg",
     description: "",
     isNew: true,
-    soldOut: false,
+    soldOut: true,
   },
   {
     name: "كمبيوتر",
