@@ -39,15 +39,4 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
-  {
-    name: "كمبيوتر",
-    price: 4000,
-    oldPrice: 0,
-    category: "فرش شعر",
-    sub: "حلا",
-    image: "p1792610837354.jpg",
-    description: "",
-    isNew: true,
-    soldOut: false,
-  },
 ];
