@@ -49,6 +49,7 @@
   <footer>
     <div class="wrap">
       <div class="social" id="social"></div>
+          <div class="chips sub" id="subchips" hidden></div>
       صوفيه لمستحضرات التجميل · الأسعار بالدينار الليبي
     </div>
   </footer>
@@ -60,13 +61,14 @@
   </dialog>
 
   <script src="products.js"></script>
-  <script>
-    let current = "الكل";   // الفئة المختارة
-    let searchText = "";    // نص البحث
-    let sortBy = "new";     // طريقة الترتيب
+    <script>
+    let current = "الكل";      // القسم المختار
+    let currentSub = "الكل";   // القسم الفرعي المختار (حلا، مها...)
+    let searchText = "";       // نص البحث
+    let sortBy = "new";        // طريقة الترتيب
 
     // ===== رابط واتساب =====
-        let waNumber = PHONE.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[^0-9]/g, "");
+    let waNumber = PHONE.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[^0-9]/g, "");
     if (waNumber.startsWith("00")) waNumber = waNumber.slice(2);
     if (waNumber.startsWith("2180")) waNumber = "218" + waNumber.slice(4);
     if (waNumber.startsWith("0")) waNumber = "218" + waNumber.slice(1);
@@ -110,20 +112,41 @@
     // ===== زر الطلب =====
     function orderButton(p) {
       if (p.soldOut) return `<span class="order disabled">غير متوفر حالياً</span>`;
-      return `<a class="order" href="${orderLink(p)}" target="_blank" onclick="event.stopPropagation()">اطلبي على واتساب</a>`;
+      return `<a class="order" href="${orderLink(p)}" target="_blank" onclick="event.stopPropagation()">اطلب على واتساب</a>`;
     }
 
-    // ===== أزرار الفئات =====
+    // ===== أزرار الأقسام والأقسام الفرعية =====
     function showChips() {
-            const cats = ["الكل", ...CATEGORIES];
+      const cats = ["الكل", ...CATEGORIES];
       document.getElementById("chips").innerHTML = cats.map(c =>
-        `<button class="chip ${c === current ? "active" : ""}" data-cat="${c}">${c}</button>`
+        `<button class="chip ${c === current ? "active" : ""}" data-cat="${c}">${c}${SUBCATEGORIES[c] ? " ▾" : ""}</button>`
       ).join("");
+
+      // إذا القسم المختار له أقسام فرعية، تظهر تحته
+      const subs = SUBCATEGORIES[current];
+      const subBox = document.getElementById("subchips");
+      if (subs) {
+        subBox.innerHTML = ["الكل", ...subs].map(s =>
+          `<button class="chip ${s === currentSub ? "active" : ""}" data-sub="${s}">${s}</button>`
+        ).join("");
+        subBox.hidden = false;
+      } else {
+        subBox.innerHTML = "";
+        subBox.hidden = true;
+      }
     }
     document.getElementById("chips").addEventListener("click", e => {
       const btn = e.target.closest(".chip");
       if (!btn) return;
       current = btn.dataset.cat;
+      currentSub = "الكل";
+      showChips();
+      showProducts();
+    });
+    document.getElementById("subchips").addEventListener("click", e => {
+      const btn = e.target.closest(".chip");
+      if (!btn) return;
+      currentSub = btn.dataset.sub;
       showChips();
       showProducts();
     });
@@ -134,6 +157,7 @@
         .map((p, i) => ({ ...p, index: i }))
         .filter(p =>
           (current === "الكل" || p.category === current) &&
+          (currentSub === "الكل" || p.sub === currentSub) &&
           p.name.includes(searchText)
         );
 
@@ -142,7 +166,9 @@
       if (sortBy === "new") list.reverse(); // آخر منتج تضيفه يظهر أول
 
       if (list.length === 0) {
-        document.getElementById("grid").innerHTML = `<p class="empty">ما فيه منتج بهذا الاسم 🙁</p>`;
+        document.getElementById("grid").innerHTML = searchText
+          ? `<p class="empty">ما فيه منتج بهذا الاسم 🙁</p>`
+          : `<p class="empty">ما فيه منتجات في هذا القسم حالياً، قريباً إن شاء الله ✨</p>`;
         return;
       }
 
@@ -150,7 +176,7 @@
         <article class="card ${p.soldOut ? "is-out" : ""}" data-index="${p.index}">
           <div class="pic">${picture(p)}${badges(p)}</div>
           <div class="info">
-            <div class="cat">${p.category}</div>
+            <div class="cat">${p.sub ? p.category + " · " + p.sub : p.category}</div>
             <h3>${p.name}</h3>
             <div class="prices">${priceHTML(p)}</div>
             ${orderButton(p)}
@@ -168,7 +194,7 @@
       document.getElementById("detailsBody").innerHTML = `
         <div class="d-pic">${picture(p)}${badges(p)}</div>
         <div class="d-info">
-          <div class="cat">${p.category}</div>
+          <div class="cat">${p.sub ? p.category + " · " + p.sub : p.category}</div>
           <h2>${p.name}</h2>
           <p>${p.description || ""}</p>
           <div class="prices">${priceHTML(p)}</div>

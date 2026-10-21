@@ -135,3 +135,8 @@ footer{border-top:1px solid var(--line);padding-block:24px;font-size:13px;color:
   .tools{flex-direction:column}
   .search,.sort{width:100%}
 }
+/* ===== الأقسام الفرعية ===== */
+.chips[hidden]{display:none}
+.chips.sub{padding-top:0;margin-top:-6px}
+.chips.sub .chip{font-size:13px;padding:5px 14px;background:var(--rose-soft);border-color:transparent}
+.chips.sub .chip.active{background:var(--gold);border-color:var(--gold);color:#fff}
