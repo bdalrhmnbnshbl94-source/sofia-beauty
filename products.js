@@ -40,14 +40,4 @@ const PRODUCTS = [
     isNew: false,
     soldOut: false,
   },
-  {
-    name: "ظل عيون",
-    price: 70,
-    oldPrice: 0,
-    category: "عيون",
-    image: "",
-    description: "12 لون، ثبات عالي.",
-    isNew: true,
-    soldOut: false,
-  },
 ];
