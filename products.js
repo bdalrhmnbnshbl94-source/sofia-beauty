@@ -30,14 +30,4 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
-  {
-    name: "ماسكارا مقاومة للماء",
-    price: 60,
-    oldPrice: 0,
-    category: "عيون",
-    image: "mascara.jpg",
-    description: "تكثيف وتطويل للرموش، لا تتكتل.",
-    isNew: false,
-    soldOut: false,
-  },
 ];
