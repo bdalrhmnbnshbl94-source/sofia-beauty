@@ -20,17 +20,6 @@ const SUBCATEGORIES = {
 
 const PRODUCTS = [
   {
-    name: "أحمر شفاه مطفي",
-    price: 45,
-    oldPrice: 60,
-    category: "فرش شعر",
-    sub: "حلا",
-    image: "lipstick.jpg",
-    description: "لون وردي ترابي، ثبات طويل طول اليوم.",
-    isNew: true,
-    soldOut: false,
-  },
-  {
     name: "ماسكارا مقاومة للماء",
     price: 60,
     oldPrice: 0,
