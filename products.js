@@ -60,14 +60,4 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
-  {
-    name: "تت",
-    price: 6,
-    oldPrice: 0,
-    category: "مصففات الشعر",
-    image: "p1792608406348.jpg",
-    description: "نن",
-    isNew: true,
-    soldOut: false,
-  },
 ];
