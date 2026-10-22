@@ -31,6 +31,15 @@
   <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
+    <!-- شاشة الترحيب (تظهر مرة وحدة كل زيارة) -->
+  <script>
+    try { if (sessionStorage.getItem("sofia-splash")) document.documentElement.classList.add("seen");
+          sessionStorage.setItem("sofia-splash", "1"); } catch (e) {}
+  </script>
+  <div class="splash" aria-hidden="true">
+    <img src="logo-sofia.svg" alt="">
+    <p>أهلاً بك في صوفيه ✨</p>
+  </div>
 
   <header>
     <div class="wrap brand"><b>صوفيه</b><span>لتسويق مواد الزينة</span></div>
