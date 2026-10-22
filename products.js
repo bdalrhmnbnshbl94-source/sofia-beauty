@@ -74,4 +74,16 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
+  {
+    id: "p1792692336661",
+    name: "مصفف شعر  060",
+    price: 144,
+    oldPrice: 0,
+    category: "مجففات الشعر",
+    sub: "هومر",
+    images: ["p1792692333902-1.jpg"],
+    description: "مصفف شعر مع شاشة عرض LED وإمكانية التحكم بدرجة الحرارة ( 150-230 درجة )",
+    isNew: true,
+    soldOut: false,
+  },
 ];
