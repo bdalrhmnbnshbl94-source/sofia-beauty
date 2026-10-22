@@ -25,15 +25,4 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
-  {
-    id: "p1792638721121",
-    name: "رت",
-    price: 66,
-    oldPrice: 96,
-    category: "مجففات الشعر",
-    images: ["p1792638718690-1.jpg"],
-    description: "",
-    isNew: true,
-    soldOut: false,
-  },
 ];
