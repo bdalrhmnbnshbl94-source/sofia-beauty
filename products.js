@@ -27,4 +27,16 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
+  {
+    id: "p1792690877098",
+    name: "مجفف شعر هومر 2000 واط",
+    price: 188,
+    oldPrice: 0,
+    category: "مجففات الشعر",
+    sub: "هومر",
+    images: ["p1792690874341-1.jpg"],
+    description: "",
+    isNew: true,
+    soldOut: false,
+  },
 ];
