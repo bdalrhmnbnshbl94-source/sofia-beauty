@@ -36,7 +36,7 @@ const PRODUCTS = [
     sub: "هومر",
     images: ["p1792690874341-1.jpg"],
     description: "",
-    isNew: true,
+    isNew: false,
     soldOut: false,
   },
   {
