@@ -86,4 +86,15 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
+  {
+    id: "p1792692596865",
+    name: "مصفف شعر 061",
+    price: 134,
+    oldPrice: 0,
+    category: "مصففات الشعر",
+    images: ["p1792692592631-1.jpg"],
+    description: "مصفف شعر مع مقبض قابل للقفل ، عنصر التسخين من PTC",
+    isNew: true,
+    soldOut: true,
+  },
 ];
