@@ -58,4 +58,15 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
+  {
+    id: "p1792641088193",
+    name: "٥غع",
+    price: 66,
+    oldPrice: 0,
+    category: "مجففات الشعر",
+    images: ["p1792641085577-1.jpg"],
+    description: "",
+    isNew: true,
+    soldOut: false,
+  },
 ];
