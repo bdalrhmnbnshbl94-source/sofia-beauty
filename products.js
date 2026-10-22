@@ -93,7 +93,7 @@ const PRODUCTS = [
     category: "مصففات الشعر",
     images: ["p1792692592631-1.jpg"],
     description: "مصفف شعر مع مقبض قابل للقفل ، عنصر التسخين من PTC",
-    isNew: true,
+    isNew: false,
     soldOut: true,
   },
   {
