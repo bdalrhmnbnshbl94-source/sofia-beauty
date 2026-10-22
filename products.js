@@ -82,7 +82,7 @@ const PRODUCTS = [
     category: "مصففات الشعر",
     images: ["p1792692333902-1.jpg"],
     description: "مصفف شعر مع شاشة عرض LED وإمكانية التحكم بدرجة الحرارة ( 150-230 درجة )",
-    isNew: true,
+    isNew: false,
     soldOut: false,
   },
   {
