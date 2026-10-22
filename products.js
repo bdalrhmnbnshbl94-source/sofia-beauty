@@ -14,15 +14,5 @@ const SUBCATEGORIES = {
 
 // ================== المنتجات ==================
 const PRODUCTS = [
-  {
-    id: "p1792676523693",
-    name: "رنا",
-    price: 0.5,
-    oldPrice: 0,
-    category: "مجففات الشعر",
-    images: ["p1792676519435-1.jpg"],
-    description: "",
-    isNew: true,
-    soldOut: false,
-  },
+
 ];
