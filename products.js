@@ -63,4 +63,15 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
+  {
+    id: "p1792692200569",
+    name: "مصصف شعر  059",
+    price: 144,
+    oldPrice: 0,
+    category: "مصففات الشعر",
+    images: ["p1792692197783-1.jpg"],
+    description: "مصفف شعر بتصميم رفيع ومقبض قابل للقفل",
+    isNew: true,
+    soldOut: false,
+  },
 ];
