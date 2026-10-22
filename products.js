@@ -17,7 +17,7 @@ const SUBCATEGORIES = {
 const PRODUCTS = [
   {
     id: "p1792685832369",
-    name: "مجفف شعر هومر 1800 وات",
+    name: "مجفف شعر هومر 1800 واط",
     price: 144,
     oldPrice: 0,
     category: "مجففات الشعر",
