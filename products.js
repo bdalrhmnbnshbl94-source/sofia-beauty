@@ -69,4 +69,15 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
+  {
+    id: "p1792644214519",
+    name: "غف",
+    price: 66,
+    oldPrice: 0,
+    category: "مجففات الشعر",
+    images: ["p1792644211783-1.jpg"],
+    description: "",
+    isNew: true,
+    soldOut: false,
+  },
 ];
