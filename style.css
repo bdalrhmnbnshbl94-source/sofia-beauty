@@ -122,9 +122,11 @@ footer{border-top:1px solid var(--line);padding-block:24px;font-size:13px;color:
 }
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
 /* ===== الشعار ===== */
 .brand{align-items:center}
 .logo{width:44px;height:auto}
+
 /* ===== تحسينات التلفون ===== */
 @media (max-width:640px){
   .brand{gap:8px;padding-block:10px}
@@ -135,8 +137,60 @@ footer{border-top:1px solid var(--line);padding-block:24px;font-size:13px;color:
   .tools{flex-direction:column}
   .search,.sort{width:100%}
 }
+
+/* ===== شعار SOFIA ===== */
+.hero-logo{display:block;width:280px;max-width:100%;height:auto;margin-bottom:18px}
+@media (max-width:640px){.hero-logo{width:230px;margin-inline:auto}}
+
 /* ===== الأقسام الفرعية ===== */
 .chips[hidden]{display:none}
 .chips.sub{padding-top:0;margin-top:-6px}
 .chips.sub .chip{font-size:13px;padding:5px 14px;background:var(--rose-soft);border-color:transparent}
 .chips.sub .chip.active{background:var(--gold);border-color:var(--gold);color:#fff}
+
+/* ================= الإضافات الجديدة ================= */
+
+/* شارة عدد الصور */
+.badge.pics{background:rgba(0,0,0,.55)}
+
+/* أزرار */
+button.order{width:100%;border:0;cursor:pointer;font-family:inherit}
+.order.add{background:var(--rose)}
+.order.ghost{background:transparent;color:#1a9e4b;border:2px solid #25D366;margin-top:8px}
+.share{margin-top:8px;font-family:inherit;font-size:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:8px 0;cursor:pointer}
+
+/* معرض الصور داخل التفاصيل */
+.d-pic{overflow:hidden}
+.slider{display:flex;width:100%;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.slider::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:center;display:grid;place-items:center}
+.slide img{width:100%;height:100%;object-fit:cover}
+.dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px}
+.dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.6)}
+.dots i.on{background:#fff;width:20px;border-radius:4px}
+
+/* زر السلة العائم */
+.cart-btn{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));left:18px;z-index:20;font-family:inherit;font-size:16px;font-weight:700;border:0;border-radius:999px;padding:12px 20px;background:var(--rose);color:#fff;box-shadow:0 10px 30px -8px rgba(120,40,70,.6);cursor:pointer}
+.cart-btn span{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:12px;background:#fff;color:var(--rose);font-size:13px;margin-inline-start:6px}
+
+/* نافذة السلة */
+dialog.cart{width:min(480px,calc(100% - 24px))}
+.cart-in{padding:22px 18px 18px;position:relative}
+.cart h2{font-family:"El Messiri",serif;margin:0 0 12px;font-size:24px}
+.c-item{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.c-pic{width:52px;height:64px;border-radius:10px;overflow:hidden;background:var(--rose-soft);display:grid;place-items:center}
+.c-pic img{width:100%;height:100%;object-fit:cover}
+.c-pic .letter{font-size:26px}
+.c-info b{display:block;font-size:14px;line-height:1.4}
+.c-info small{color:var(--muted)}
+.qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:999px}
+.qty button{width:32px;height:32px;border:0;background:none;color:var(--ink);font-size:18px;cursor:pointer}
+.qty span{min-width:22px;text-align:center;font-weight:700}
+.cart-total{border-top:1px solid var(--line);padding:14px 0;font-size:18px;text-align:center}
+.cart .clear{display:block;margin:10px auto 0;font-family:inherit;border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer}
+
+/* رسالة صغيرة */
+.toast{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:30;background:var(--ink);color:var(--bg);padding:8px 18px;border-radius:999px;font-size:14px}
+.toast[hidden]{display:none}
+.cart-btn[hidden],.order[hidden],.clear[hidden]{display:none}
+dialog{max-height:calc(100% - 32px);overflow-y:auto}

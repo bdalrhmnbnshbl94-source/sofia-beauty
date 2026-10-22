@@ -3,32 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>صوفيه لمستحضرات التجميل</title>
+  <title>صوفيه لتسويق مواد الزينة</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@600&family=Tajawal:wght@400;700&display=swap">
   <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="icon.png">
+
+  <!-- الأيقونة والتطبيق -->
+  <link rel="icon" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#B03A6B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SOFIA">
+
+  <!-- معاينة الرابط في واتساب وغيره -->
   <meta name="description" content="صوفيه لتسويق مواد الزينة: مجففات ومصففات الشعر، مكائن الحلاقة وفرش الشعر.">
   <meta property="og:title" content="SOFIA | صوفيه لتسويق مواد الزينة">
   <meta property="og:description" content="تصفّح منتجاتنا وأسعارها واطلب مباشرة على الواتساب.">
   <meta property="og:image" content="https://bdalrhmnbnshbl94-source.github.io/sofia-beauty/og-image.jpg">
-    <meta property="og:image:width" content="1200">
+  <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:secure_url" content="https://bdalrhmnbnshbl94-source.github.io/sofia-beauty/og-image.jpg">
+  <meta itemprop="image" content="https://bdalrhmnbnshbl94-source.github.io/sofia-beauty/og-image.jpg">
   <meta property="og:url" content="https://bdalrhmnbnshbl94-source.github.io/sofia-beauty/">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SOFIA">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 
   <header>
-        <div class="wrap brand"><img src="logo.svg" alt="" class="logo"><b>صوفيه</b><span>لمستحضرات التجميل</span></div>
-
+    <div class="wrap brand"><b>صوفيه</b><span>لتسويق مواد الزينة</span></div>
   </header>
 
   <main class="wrap">
     <section class="hero">
-            <h1><em>صوفيه</em> لتسويق مواد الزينة</h1>
-      <p>تصفّح منتجاتنا وأسعارها، واطلب أي منتج مباشرة على الواتساب.</p>
+      <img src="logo-sofia.svg" alt="SOFIA" class="hero-logo">
+      <h1><em>صوفيه</em> لتسويق مواد الزينة</h1>
+      <p>تصفّح منتجاتنا وأسعارها، واطلب مباشرة على الواتساب.</p>
       <div class="contact">واتساب: <b id="phone"></b> <a id="wa" class="wa-btn" target="_blank">راسلنا</a></div>
     </section>
 
@@ -50,173 +62,265 @@
   <footer>
     <div class="wrap">
       <div class="social" id="social"></div>
-      صوفيه لمستحضرات التجميل · الأسعار بالدينار الليبي
+      صوفيه لتسويق مواد الزينة · الأسعار بالدينار الليبي
     </div>
   </footer>
 
+  <!-- زر السلة -->
+  <button class="cart-btn" id="cartBtn" hidden>🛒 السلة <span id="cartCount">0</span></button>
+
+  <!-- نافذة السلة -->
+  <dialog id="cart" class="cart">
+    <div class="cart-in">
+      <button class="close" data-close aria-label="إغلاق">×</button>
+      <h2>🛒 سلة الطلب</h2>
+      <div id="cartItems"></div>
+      <div class="cart-total">المجموع: <b id="cartTotal">0</b> د.ل</div>
+      <a class="order" id="sendOrder" target="_blank">أرسل الطلب على واتساب</a>
+      <button class="clear" id="clearCart">إفراغ السلة</button>
+    </div>
+  </dialog>
+
   <!-- نافذة تفاصيل المنتج -->
   <dialog id="details">
-    <button class="close" id="close" aria-label="إغلاق">×</button>
+    <button class="close" data-close aria-label="إغلاق">×</button>
     <div id="detailsBody"></div>
   </dialog>
 
-    <script>document.write('<script src="products.js?v=' + Date.now() + '"><\/script>');</script>
-    <script>
-    let current = "الكل";      // القسم المختار
-    let currentSub = "الكل";   // القسم الفرعي المختار (حلا، مها...)
-    let searchText = "";       // نص البحث
-    let sortBy = "new";        // طريقة الترتيب
+  <div class="toast" id="toast" hidden></div>
 
-    // ===== رابط واتساب =====
+  <!-- المنتجات (دائماً آخر نسخة) -->
+  <script>document.write('<script src="products.js?v=' + Date.now() + '"><\/script>');</script>
+  <script>
+    // ===== إعدادات احتياطية لو ناقصة في products.js =====
+    if (typeof SUBCATEGORIES === "undefined") window.SUBCATEGORIES = {};
+    if (typeof INSTAGRAM === "undefined") window.INSTAGRAM = "";
+    if (typeof TIKTOK === "undefined") window.TIKTOK = "";
+
+    let current = "الكل", currentSub = "الكل", searchText = "", sortBy = "new";
+    const $ = id => document.getElementById(id);
+
+    // كل منتج له رقم ثابت (id) وقائمة صور
+    PRODUCTS.forEach((p, i) => {
+      p.id = p.id || "i" + i;
+      p.images = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
+    });
+    const byId = id => PRODUCTS.find(p => p.id === id);
+
+    // ===== عدّاد الزوار =====
+    function track(name) {
+      if (window.goatcounter && goatcounter.count) goatcounter.count({ path: name, title: name, event: true });
+    }
+
+    // ===== واتساب =====
     let waNumber = PHONE.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[^0-9]/g, "");
     if (waNumber.startsWith("00")) waNumber = waNumber.slice(2);
     if (waNumber.startsWith("2180")) waNumber = "218" + waNumber.slice(4);
     if (waNumber.startsWith("0")) waNumber = "218" + waNumber.slice(1);
-    function waLink(text) {
-      return "https://wa.me/" + waNumber + (text ? "?text=" + encodeURIComponent(text) : "");
-    }
-    function orderLink(p) {
-      return waLink("مرحباً، أبي أطلب: " + p.name + " – " + p.price + " د.ل");
-    }
-    document.getElementById("phone").textContent = PHONE;
-    document.getElementById("wa").href = waLink("");
+    const waLink = text => "https://wa.me/" + waNumber + (text ? "?text=" + encodeURIComponent(text) : "");
+    $("phone").textContent = PHONE;
+    $("wa").href = waLink("");
+    $("wa").onclick = () => track("واتساب-راسلنا");
 
-    // ===== روابط انستغرام وتيك توك =====
+    // ===== انستغرام وتيك توك =====
     let social = "";
     if (INSTAGRAM) social += `<a href="${INSTAGRAM}" target="_blank">انستغرام</a>`;
     if (TIKTOK) social += `<a href="${TIKTOK}" target="_blank">تيك توك</a>`;
-    document.getElementById("social").innerHTML = social;
+    $("social").innerHTML = social;
 
-    // ===== صورة المنتج (وإذا ما فيه صورة يظهر أول حرف) =====
-    function picture(p) {
-      return `<img src="images/${p.image}" alt="${p.name}"
-                   onerror="this.outerHTML='<span class=letter>${p.name[0]}</span>'">`;
-    }
-
-    // ===== السعر (مع التخفيض إذا موجود) =====
+    // ===== أجزاء صغيرة =====
+    const img = (file, name) => `<img src="images/${file}" alt="${name}" loading="lazy"
+        onerror="this.outerHTML='<span class=letter>${name[0]}</span>'">`;
+    const firstPic = p => p.images.length ? img(p.images[0], p.name) : `<span class="letter">${p.name[0]}</span>`;
     function priceHTML(p) {
-      let html = `<span class="price">${p.price} <small>د.ل</small></span>`;
-      if (p.oldPrice > p.price) html += ` <s class="old">${p.oldPrice}</s>`;
-      return html;
+      let h = `<span class="price">${p.price} <small>د.ل</small></span>`;
+      if (p.oldPrice > p.price) h += ` <s class="old">${p.oldPrice}</s>`;
+      return h;
     }
-
-    // ===== الشارات (جديد / تخفيض / نفدت) =====
     function badges(p) {
-      let html = "";
-      if (p.soldOut) html += `<span class="badge out">نفدت الكمية</span>`;
-      else if (p.oldPrice > p.price) html += `<span class="badge sale">تخفيض</span>`;
-      if (p.isNew) html += `<span class="badge new">جديد</span>`;
-      return `<div class="badges">${html}</div>`;
+      let h = "";
+      if (p.soldOut) h += `<span class="badge out">نفدت الكمية</span>`;
+      else if (p.oldPrice > p.price) h += `<span class="badge sale">تخفيض</span>`;
+      if (p.isNew) h += `<span class="badge new">جديد</span>`;
+      if (p.images.length > 1) h += `<span class="badge pics">📸 ${p.images.length}</span>`;
+      return `<div class="badges">${h}</div>`;
     }
-
-    // ===== زر الطلب =====
-    function orderButton(p) {
+    const catLabel = p => p.sub ? p.category + " · " + p.sub : p.category;
+    function addButton(p) {
       if (p.soldOut) return `<span class="order disabled">غير متوفر حالياً</span>`;
-      return `<a class="order" href="${orderLink(p)}" target="_blank" onclick="event.stopPropagation()">اطلب على واتساب</a>`;
+      return `<button class="order add" data-add="${p.id}">🛒 أضف للسلة</button>`;
+    }
+    function toast(text) {
+      const t = $("toast");
+      t.textContent = text;
+      t.hidden = false;
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => t.hidden = true, 1800);
     }
 
-    // ===== أزرار الأقسام والأقسام الفرعية =====
+    // ===== الأقسام =====
     function showChips() {
-      const cats = ["الكل", ...CATEGORIES];
-      document.getElementById("chips").innerHTML = cats.map(c =>
-        `<button class="chip ${c === current ? "active" : ""}" data-cat="${c}">${c}${SUBCATEGORIES[c] ? " ▾" : ""}</button>`
-      ).join("");
-
-      // إذا القسم المختار له أقسام فرعية، تظهر تحته
+      $("chips").innerHTML = ["الكل", ...CATEGORIES].map(c =>
+        `<button class="chip ${c === current ? "active" : ""}" data-cat="${c}">${c}${SUBCATEGORIES[c] ? " ▾" : ""}</button>`).join("");
       const subs = SUBCATEGORIES[current];
-      const subBox = document.getElementById("subchips");
-      if (subs) {
-        subBox.innerHTML = ["الكل", ...subs].map(s =>
-          `<button class="chip ${s === currentSub ? "active" : ""}" data-sub="${s}">${s}</button>`
-        ).join("");
-        subBox.hidden = false;
-      } else {
-        subBox.innerHTML = "";
-        subBox.hidden = true;
-      }
+      $("subchips").hidden = !subs;
+      $("subchips").innerHTML = subs ? ["الكل", ...subs].map(s =>
+        `<button class="chip ${s === currentSub ? "active" : ""}" data-sub="${s}">${s}</button>`).join("") : "";
     }
-    document.getElementById("chips").addEventListener("click", e => {
-      const btn = e.target.closest(".chip");
-      if (!btn) return;
-      current = btn.dataset.cat;
-      currentSub = "الكل";
-      showChips();
-      showProducts();
-    });
-    document.getElementById("subchips").addEventListener("click", e => {
-      const btn = e.target.closest(".chip");
-      if (!btn) return;
-      currentSub = btn.dataset.sub;
-      showChips();
-      showProducts();
-    });
+    $("chips").onclick = e => {
+      const b = e.target.closest(".chip"); if (!b) return;
+      current = b.dataset.cat; currentSub = "الكل"; showChips(); showProducts();
+    };
+    $("subchips").onclick = e => {
+      const b = e.target.closest(".chip"); if (!b) return;
+      currentSub = b.dataset.sub; showChips(); showProducts();
+    };
 
-    // ===== بطاقات المنتجات =====
+    // ===== المنتجات =====
     function showProducts() {
-      let list = PRODUCTS
-        .map((p, i) => ({ ...p, index: i }))
-        .filter(p =>
-          (current === "الكل" || p.category === current) &&
-          (currentSub === "الكل" || p.sub === currentSub) &&
-          p.name.includes(searchText)
-        );
-
+      let list = PRODUCTS.filter(p =>
+        (current === "الكل" || p.category === current) &&
+        (currentSub === "الكل" || p.sub === currentSub) &&
+        p.name.includes(searchText));
       if (sortBy === "low") list.sort((a, b) => a.price - b.price);
-      if (sortBy === "high") list.sort((a, b) => b.price - a.price);
-      if (sortBy === "new") list.reverse(); // آخر منتج تضيفه يظهر أول
+      else if (sortBy === "high") list.sort((a, b) => b.price - a.price);
+      else list = list.slice().reverse();
 
-      if (list.length === 0) {
-        document.getElementById("grid").innerHTML = searchText
+      if (!list.length) {
+        $("grid").innerHTML = searchText
           ? `<p class="empty">ما فيه منتج بهذا الاسم 🙁</p>`
           : `<p class="empty">ما فيه منتجات في هذا القسم حالياً، قريباً إن شاء الله ✨</p>`;
         return;
       }
-
-      document.getElementById("grid").innerHTML = list.map(p => `
-        <article class="card ${p.soldOut ? "is-out" : ""}" data-index="${p.index}">
-          <div class="pic">${picture(p)}${badges(p)}</div>
+      $("grid").innerHTML = list.map(p => `
+        <article class="card ${p.soldOut ? "is-out" : ""}" data-id="${p.id}">
+          <div class="pic">${firstPic(p)}${badges(p)}</div>
           <div class="info">
-            <div class="cat">${p.sub ? p.category + " · " + p.sub : p.category}</div>
+            <div class="cat">${catLabel(p)}</div>
             <h3>${p.name}</h3>
             <div class="prices">${priceHTML(p)}</div>
-            ${orderButton(p)}
+            ${addButton(p)}
           </div>
-        </article>`
-      ).join("");
+        </article>`).join("");
     }
 
-    // ===== نافذة التفاصيل لما الزبون يضغط على منتج =====
-    const dialog = document.getElementById("details");
-    document.getElementById("grid").addEventListener("click", e => {
-      const card = e.target.closest(".card");
-      if (!card) return;
-      const p = PRODUCTS[card.dataset.index];
-      document.getElementById("detailsBody").innerHTML = `
-        <div class="d-pic">${picture(p)}${badges(p)}</div>
+    // ===== تفاصيل المنتج (مع كل الصور وزر المشاركة) =====
+    const details = $("details");
+    function openProduct(p) {
+      const pics = p.images.length ? p.images : [null];
+      $("detailsBody").innerHTML = `
+        <div class="d-pic">
+          <div class="slider" id="slider">${pics.map(f => `<div class="slide">${f ? img(f, p.name) : `<span class="letter">${p.name[0]}</span>`}</div>`).join("")}</div>
+          ${pics.length > 1 ? `<div class="dots" id="dots">${pics.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("")}</div>` : ""}
+          ${badges(p)}
+        </div>
         <div class="d-info">
-          <div class="cat">${p.sub ? p.category + " · " + p.sub : p.category}</div>
+          <div class="cat">${catLabel(p)}</div>
           <h2>${p.name}</h2>
           <p>${p.description || ""}</p>
           <div class="prices">${priceHTML(p)}</div>
-          ${orderButton(p)}
+          ${addButton(p)}
+          ${p.soldOut ? "" : `<a class="order ghost" target="_blank" href="${waLink("مرحباً، أبي أطلب: " + p.name + " – " + p.price + " د.ل")}" onclick="track('طلب-مباشر/${p.name}')">اطلب الآن على واتساب</a>`}
+          <button class="share" data-share="${p.id}">🔗 شارك المنتج</button>
         </div>`;
-      dialog.showModal();
+      const slider = $("slider"), dots = $("dots");
+      if (dots) slider.onscroll = () => {
+        const i = Math.round(Math.abs(slider.scrollLeft) / slider.clientWidth);
+        [...dots.children].forEach((d, k) => d.className = k === i ? "on" : "");
+      };
+      history.replaceState(null, "", "#p-" + p.id);
+      if (!details.open) details.showModal();
+      track("منتج/" + p.name);
+    }
+    $("grid").onclick = e => {
+      if (e.target.closest("[data-add]")) return;
+      const c = e.target.closest(".card");
+      if (c) openProduct(byId(c.dataset.id));
+    };
+    details.addEventListener("close", () => history.replaceState(null, "", location.pathname + location.search));
+
+    // ===== المشاركة =====
+    async function share(p) {
+      const url = location.origin + location.pathname + "#p-" + p.id;
+      const text = p.name + " – " + p.price + " د.ل";
+      track("مشاركة/" + p.name);
+      if (navigator.share) {
+        try { await navigator.share({ title: "SOFIA", text, url }); } catch (e) {}
+        return;
+      }
+      try { await navigator.clipboard.writeText(url); toast("✅ تم نسخ رابط المنتج"); }
+      catch (e) { window.open("https://wa.me/?text=" + encodeURIComponent(text + "\n" + url), "_blank"); }
+    }
+
+    // ===== السلة =====
+    let cart = {};
+    try { cart = JSON.parse(localStorage.getItem("sofia-cart") || "{}"); } catch (e) {}
+    const saveCart = () => { try { localStorage.setItem("sofia-cart", JSON.stringify(cart)); } catch (e) {} };
+    function cartList() {
+      return Object.entries(cart)
+        .map(([id, qty]) => ({ p: byId(id), qty }))
+        .filter(x => x.p && !x.p.soldOut && x.qty > 0);
+    }
+    function updateCart() {
+      const items = cartList();
+      cart = Object.fromEntries(items.map(x => [x.p.id, x.qty]));
+      saveCart();
+      const count = items.reduce((s, x) => s + x.qty, 0);
+      const total = items.reduce((s, x) => s + x.qty * x.p.price, 0);
+      $("cartCount").textContent = count;
+      $("cartBtn").hidden = count === 0;
+      $("cartTotal").textContent = total;
+      $("cartItems").innerHTML = items.length ? items.map(x => `
+        <div class="c-item">
+          <div class="c-pic">${firstPic(x.p)}</div>
+          <div class="c-info"><b>${x.p.name}</b><small>${x.p.price} د.ل</small></div>
+          <div class="qty">
+            <button data-plus="${x.p.id}">+</button><span>${x.qty}</span><button data-minus="${x.p.id}">−</button>
+          </div>
+        </div>`).join("") : `<p class="empty">السلة فاضية</p>`;
+      const msg = "مرحباً، أبي أطلب من صوفيه:\n" +
+        items.map(x => `• ${x.p.name} × ${x.qty} = ${x.qty * x.p.price} د.ل`).join("\n") +
+        `\n\nالمجموع: ${total} د.ل`;
+      $("sendOrder").href = waLink(msg);
+      $("sendOrder").hidden = !items.length;
+      $("clearCart").hidden = !items.length;
+    }
+    function addToCart(id) {
+      cart[id] = (cart[id] || 0) + 1;
+      updateCart();
+      toast("✅ أُضيف للسلة");
+      track("سلة/" + byId(id).name);
+    }
+    document.addEventListener("click", e => {
+      const add = e.target.closest("[data-add]");
+      if (add) { e.stopPropagation(); addToCart(add.dataset.add); }
+      const sh = e.target.closest("[data-share]");
+      if (sh) share(byId(sh.dataset.share));
+      const plus = e.target.closest("[data-plus]");
+      if (plus) { cart[plus.dataset.plus]++; updateCart(); }
+      const minus = e.target.closest("[data-minus]");
+      if (minus) { cart[minus.dataset.minus]--; updateCart(); }
+      const close = e.target.closest("[data-close]");
+      if (close) close.closest("dialog").close();
+      if (e.target.tagName === "DIALOG") e.target.close();
     });
-    document.getElementById("close").onclick = () => dialog.close();
-    dialog.addEventListener("click", e => { if (e.target === dialog) dialog.close(); });
+    $("cartBtn").onclick = () => $("cart").showModal();
+    $("clearCart").onclick = () => { cart = {}; updateCart(); };
+    $("sendOrder").onclick = () => track("طلب-سلة");
 
     // ===== البحث والترتيب =====
-    document.getElementById("search").addEventListener("input", e => {
-      searchText = e.target.value.trim();
-      showProducts();
-    });
-    document.getElementById("sort").addEventListener("change", e => {
-      sortBy = e.target.value;
-      showProducts();
-    });
+    $("search").oninput = e => { searchText = e.target.value.trim(); showProducts(); };
+    $("sort").onchange = e => { sortBy = e.target.value; showProducts(); };
 
+    // ===== البداية =====
     showChips();
     showProducts();
+    updateCart();
+    const linked = location.hash.startsWith("#p-") && byId(location.hash.slice(3));
+    if (linked) openProduct(linked);
   </script>
+
+  <!-- عدّاد الزوار (GoatCounter) -->
+  <script data-goatcounter="https://sofia-beauty.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

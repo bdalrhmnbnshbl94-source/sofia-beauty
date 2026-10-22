@@ -12,10 +12,13 @@
     .admin{max-width:720px;margin:0 auto;padding:20px 16px 80px}
     .admin h1{font-family:"El Messiri",serif;color:var(--rose);font-size:30px;margin:8px 0 4px}
     .admin .hint{color:var(--muted);font-size:14px;margin:0 0 16px}
+    .tabs{display:flex;gap:8px;margin-bottom:16px}
+    .tabs button{flex:1;font-family:inherit;font-size:15px;font-weight:700;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 0;cursor:pointer}
+    .tabs button.on{background:var(--rose);border-color:var(--rose);color:#fff}
     .box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:18px}
     .box h2{font-size:18px;margin:0 0 12px}
     .field{display:grid;gap:4px;margin-bottom:12px;font-size:14px;color:var(--muted)}
-    .field input,.field select,.field textarea{font-family:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
+    .field input,.field select,.field textarea,.cat-row input{font-family:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
     .field textarea{min-height:70px;resize:vertical}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .checks{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px;font-size:15px}
@@ -23,7 +26,11 @@
     .btn{font-family:inherit;font-size:16px;font-weight:700;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;background:var(--rose);color:#fff;width:100%}
     .btn.light{background:var(--rose-soft);color:var(--rose)}
     .btn:disabled{opacity:.5}
-    .preview{width:110px;aspect-ratio:4/5;border-radius:12px;background:var(--rose-soft) center/cover no-repeat;display:grid;place-items:center;color:var(--muted);font-size:12px;margin-bottom:8px}
+    .pics{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+    .pics .ph{position:relative;width:76px;aspect-ratio:4/5;border-radius:10px;background:var(--rose-soft) center/cover no-repeat}
+    .pics .ph button{position:absolute;top:-6px;left:-6px;width:24px;height:24px;border-radius:50%;border:0;background:#b4472e;color:#fff;font-size:14px;cursor:pointer}
+    .pics .ph i{position:absolute;bottom:4px;right:4px;font-style:normal;font-size:10px;background:var(--rose);color:#fff;border-radius:6px;padding:0 5px}
+    .pics .empty-pic{width:76px;aspect-ratio:4/5;border-radius:10px;background:var(--rose-soft);display:grid;place-items:center;color:var(--muted);font-size:11px;text-align:center}
     .msg{border-radius:12px;padding:10px 14px;font-size:14px;margin-bottom:14px}
     .msg.ok{background:#e3f6ea;color:#1d6b3c}
     .msg.err{background:#fde8e4;color:#9b2c16}
@@ -38,6 +45,10 @@
     .item .acts .del.arm{background:#b4472e;color:#fff}
     .tag{font-size:11px;border-radius:999px;padding:1px 8px;margin-inline-start:4px;color:#fff;background:#4a3a40}
     .tag.new{background:var(--gold)}
+    .cat-row{display:grid;grid-template-columns:1fr 36px;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+    .cat-row .subs{grid-column:1/-1;font-size:14px}
+    .cat-row .rm{border:0;border-radius:10px;background:#fde8e4;color:#b4472e;font-size:16px;cursor:pointer}
+    .cat-row small{grid-column:1/-1;color:var(--muted);font-size:12px}
     [hidden]{display:none!important}
   </style>
 </head>
@@ -45,7 +56,7 @@
 <main class="admin">
 
   <h1>إدارة صوفيه</h1>
-  <p class="hint">من هنا تضيف المنتجات وتعدّلها. التغييرات تظهر للزباين بعد دقيقة إلى ثلاث دقائق.</p>
+  <p class="hint">التغييرات تظهر للزباين بعد دقيقة إلى ثلاث دقائق.</p>
 
   <div id="msg" class="msg" hidden></div>
 
@@ -57,48 +68,79 @@
     <button class="btn" id="saveToken">حفظ المفتاح</button>
   </section>
 
-  <!-- ===== إضافة / تعديل منتج ===== -->
-  <section class="box" id="formBox" hidden>
-    <h2 id="formTitle">➕ إضافة منتج جديد</h2>
-    <div class="preview" id="preview">بدون صورة</div>
-    <div class="field">صورة المنتج
-      <input id="fImg" type="file" accept="image/*">
-    </div>
-    <div class="field">اسم المنتج
-      <input id="fName" placeholder="مثال: سشوار احترافي 2200 واط">
-    </div>
-    <div class="row">
-      <div class="field">السعر (د.ل)
-        <input id="fPrice" type="number" inputmode="decimal" min="0" placeholder="120">
-      </div>
-      <div class="field">السعر القديم (للتخفيض)
-        <input id="fOld" type="number" inputmode="decimal" min="0" placeholder="اتركه فاضي">
-      </div>
-    </div>
-    <div class="field">القسم
-      <select id="fCat"></select>
-    </div>
-    <div class="field" id="subField" hidden>القسم الفرعي
-      <select id="fSub"></select>
-    </div>
-    <div class="field">وصف قصير
-      <textarea id="fDesc" placeholder="الماركة، الحجم، المميزات..."></textarea>
-    </div>
-    <div class="checks">
-      <label><input type="checkbox" id="fNew"> جديد</label>
-      <label><input type="checkbox" id="fOut"> نفدت الكمية</label>
-    </div>
-    <button class="btn" id="saveBtn">أضف المنتج</button>
-    <button class="btn light" id="cancelEdit" style="margin-top:8px" hidden>إلغاء التعديل</button>
-  </section>
+  <div class="tabs" id="tabs" hidden>
+    <button data-tab="products" class="on">📦 المنتجات</button>
+    <button data-tab="settings">⚙️ الإعدادات</button>
+  </div>
 
-  <!-- ===== قائمة المنتجات ===== -->
-  <section class="box" id="listBox" hidden>
-    <h2>📦 المنتجات الموجودة (<span id="count">0</span>)</h2>
-    <div id="list"></div>
-  </section>
+  <!-- ================= تبويب المنتجات ================= -->
+  <div id="tab-products" hidden>
+    <section class="box" id="formBox">
+      <h2 id="formTitle">➕ إضافة منتج جديد</h2>
+      <div class="field">الصور (تقدر تختار أكثر من صورة، الأولى هي الرئيسية)
+        <div class="pics" id="pics"></div>
+        <input id="fImg" type="file" accept="image/*" multiple>
+      </div>
+      <div class="field">اسم المنتج
+        <input id="fName" placeholder="مثال: سشوار احترافي 2200 واط">
+      </div>
+      <div class="row">
+        <div class="field">السعر (د.ل)
+          <input id="fPrice" type="number" inputmode="decimal" min="0" placeholder="120">
+        </div>
+        <div class="field">السعر القديم (للتخفيض)
+          <input id="fOld" type="number" inputmode="decimal" min="0" placeholder="اتركه فاضي">
+        </div>
+      </div>
+      <div class="field">القسم
+        <select id="fCat"></select>
+      </div>
+      <div class="field" id="subField" hidden>القسم الفرعي
+        <select id="fSub"></select>
+      </div>
+      <div class="field">وصف قصير
+        <textarea id="fDesc" placeholder="الماركة، الحجم، المميزات..."></textarea>
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" id="fNew"> جديد</label>
+        <label><input type="checkbox" id="fOut"> نفدت الكمية</label>
+      </div>
+      <button class="btn" id="saveBtn">أضف المنتج</button>
+      <button class="btn light" id="cancelEdit" style="margin-top:8px" hidden>إلغاء التعديل</button>
+    </section>
 
-  <p class="hint" style="text-align:center">
+    <section class="box">
+      <h2>📦 المنتجات الموجودة (<span id="count">0</span>)</h2>
+      <div id="list"></div>
+    </section>
+  </div>
+
+  <!-- ================= تبويب الإعدادات ================= -->
+  <div id="tab-settings" hidden>
+    <section class="box">
+      <h2>📞 التواصل</h2>
+      <div class="field">رقم الواتساب (مع مفتاح الدولة)
+        <input id="sPhone" dir="ltr" placeholder="+218 92 123 4567">
+      </div>
+      <div class="field">رابط انستغرام (اختياري)
+        <input id="sInsta" dir="ltr" placeholder="https://instagram.com/...">
+      </div>
+      <div class="field">رابط تيك توك (اختياري)
+        <input id="sTiktok" dir="ltr" placeholder="https://tiktok.com/@...">
+      </div>
+    </section>
+
+    <section class="box">
+      <h2>🗂️ الأقسام</h2>
+      <p class="hint">لكل قسم تقدر تكتب أقسام فرعية مفصولة بفاصلة، مثل: حلا، مها، أليسا. اتركها فاضية إذا ما تحتاج.</p>
+      <div id="cats"></div>
+      <button class="btn light" id="addCat">➕ قسم جديد</button>
+    </section>
+
+    <button class="btn" id="saveSettings">💾 احفظ الإعدادات</button>
+  </div>
+
+  <p class="hint" style="text-align:center;margin-top:20px">
     <a href="./" style="color:var(--rose)">فتح صفحة الزباين</a> ·
     <a href="#" id="forget" style="color:var(--muted)">مسح المفتاح من هذا الجهاز</a>
   </p>
@@ -113,9 +155,9 @@
 
   let token = "";
   try { token = localStorage.getItem("sofia-token") || ""; } catch (e) {}
-  let data = null;       // الإعدادات والمنتجات
-  let editing = -1;      // رقم المنتج اللي نعدّله (-1 = منتج جديد)
-  let imageBlob = null;  // الصورة الجديدة المختارة
+  let data = null;      // الإعدادات والمنتجات
+  let editing = -1;     // رقم المنتج اللي نعدّله (-1 = منتج جديد)
+  let pics = [];        // صور المنتج: {file: "اسم موجود"} أو {blob, url}
   const $ = id => document.getElementById(id);
 
   // ===== رسائل =====
@@ -127,7 +169,7 @@
     if (type !== "wait") m.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
-  // ===== تحويل النص والصور لـ base64 =====
+  // ===== base64 =====
   function toB64(bytes) {
     let bin = "";
     for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
@@ -136,7 +178,7 @@
   const textToB64 = t => toB64(new TextEncoder().encode(t));
   const b64ToText = b => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\n/g, "")), c => c.charCodeAt(0)));
 
-  // ===== التعامل مع GitHub =====
+  // ===== GitHub =====
   async function gh(path, options = {}) {
     const res = await fetch(API + path + (options.method ? "" : "?ref=" + BRANCH + "&t=" + Date.now()), {
       ...options,
@@ -156,12 +198,17 @@
     return gh(path, { method: "PUT", body: JSON.stringify({ message, content: b64, branch: BRANCH, sha }) });
   }
 
+  // رقم ثابت من اسم المنتج وصورته
+  function makeId(text) {
+    let h = 0;
+    for (const ch of String(text)) h = (h * 31 + ch.codePointAt(0)) >>> 0;
+    return "p" + h.toString(36);
+  }
+
   // ===== قراءة products.js =====
-  async function load() {
-    say("جاري تحميل المنتجات...", "wait");
+  async function readProducts() {
     const file = await gh("products.js");
-    const src = b64ToText(file.content);
-    data = new Function(src + `
+    const d = new Function(b64ToText(file.content) + `
       return {
         PHONE: typeof PHONE !== "undefined" ? PHONE : "",
         INSTAGRAM: typeof INSTAGRAM !== "undefined" ? INSTAGRAM : "",
@@ -170,77 +217,86 @@
         SUBCATEGORIES: typeof SUBCATEGORIES !== "undefined" ? SUBCATEGORIES : {},
         PRODUCTS: typeof PRODUCTS !== "undefined" ? PRODUCTS : [],
       };`)();
+    // كل منتج له رقم ثابت وقائمة صور
+    d.PRODUCTS.forEach(p => {
+      p.images = (p.images && p.images.length) ? p.images : (p.image ? [p.image] : []);
+      p.id = p.id || makeId(p.name + p.images[0]);   // منتجات قديمة بدون رقم
+    });
+    return d;
+  }
+  async function load() {
+    say("جاري التحميل...", "wait");
+    data = await readProducts();
     $("msg").hidden = true;
     fillCategories();
     showList();
-    $("formBox").hidden = false;
-    $("listBox").hidden = false;
+    showSettings();
+    $("tabs").hidden = false;
+    showTab("products");
   }
 
-  // ===== كتابة products.js من جديد =====
+  // ===== كتابة products.js =====
   function buildFile() {
     const q = JSON.stringify;
-    const subs = Object.entries(data.SUBCATEGORIES).map(([k, v]) => `  ${q(k)}: ${q(v)},`).join("\n");
-    const products = data.PRODUCTS.map(p => {
-      const lines = [
-        `    name: ${q(p.name || "")},`,
-        `    price: ${Number(p.price) || 0},`,
-        `    oldPrice: ${Number(p.oldPrice) || 0},`,
-        `    category: ${q(p.category || "")},`,
-      ];
-      if (p.sub) lines.push(`    sub: ${q(p.sub)},`);
-      lines.push(
-        `    image: ${q(p.image || "")},`,
-        `    description: ${q(p.description || "")},`,
-        `    isNew: ${!!p.isNew},`,
-        `    soldOut: ${!!p.soldOut},`
-      );
-      return "  {\n" + lines.join("\n") + "\n  },";
-    }).join("\n");
+    const subs = Object.entries(data.SUBCATEGORIES).filter(([, v]) => v.length).map(([k, v]) => `  ${q(k)}: ${q(v)},`).join("\n");
+    const products = data.PRODUCTS.map(p => `  {
+    id: ${q(p.id)},
+    name: ${q(p.name || "")},
+    price: ${Number(p.price) || 0},
+    oldPrice: ${Number(p.oldPrice) || 0},
+    category: ${q(p.category || "")},${p.sub ? `\n    sub: ${q(p.sub)},` : ""}
+    images: ${q(p.images || [])},
+    description: ${q(p.description || "")},
+    isNew: ${!!p.isNew},
+    soldOut: ${!!p.soldOut},
+  },`).join("\n");
 
     return `// ================== إعدادات صوفيه ==================
+// ⚠️ هذا الملف يتعدّل من صفحة الإدارة (admin.html). لا ترفعه من الكمبيوتر.
 
-const PHONE = ${q(data.PHONE)};     // رقم الواتساب حقك
-const INSTAGRAM = ${q(data.INSTAGRAM)};                 // رابط انستغرام (اتركه "" إذا ما عندك)
-const TIKTOK = ${q(data.TIKTOK)};                    // رابط تيك توك (اتركه "" إذا ما عندك)
+const PHONE = ${q(data.PHONE)};
+const INSTAGRAM = ${q(data.INSTAGRAM)};
+const TIKTOK = ${q(data.TIKTOK)};
 
 // ================== الأقسام ==================
-// اكتب أقسام محلك هنا بالترتيب اللي تبيه يظهر في الموقع
 const CATEGORIES = ${q(data.CATEGORIES)};
 
-// الأقسام الفرعية: لما الزبون يضغط على القسم تظهر تحته هذي الأقسام
 const SUBCATEGORIES = {
 ${subs}
 };
 
 // ================== المنتجات ==================
-// name الاسم · price السعر · oldPrice السعر القديم (0 = بدون تخفيض)
-// category القسم · sub القسم الفرعي · image اسم الصورة داخل images
-// description الوصف · isNew جديد؟ · soldOut نفدت الكمية؟
-
 const PRODUCTS = [
 ${products}
 ];
 `;
   }
-
-  async function saveProducts(message) {
+  async function saveAll(message) {
     await putFile("products.js", textToB64(buildFile()), message);
   }
 
-  // ===== الأقسام في النموذج =====
-  function fillCategories() {
-    $("fCat").innerHTML = data.CATEGORIES.map(c => `<option>${c}</option>`).join("");
-    updateSub();
+  // ===== التبويبات =====
+  function showTab(name) {
+    $("tab-products").hidden = name !== "products";
+    $("tab-settings").hidden = name !== "settings";
+    [...$("tabs").children].forEach(b => b.classList.toggle("on", b.dataset.tab === name));
+  }
+  $("tabs").onclick = e => { const b = e.target.closest("button"); if (b) showTab(b.dataset.tab); };
+
+  // ===== الأقسام في نموذج المنتج =====
+  function fillCategories(selected, selectedSub) {
+    $("fCat").innerHTML = data.CATEGORIES.map(c => `<option ${c === selected ? "selected" : ""}>${c}</option>`).join("");
+    updateSub(selectedSub);
   }
   function updateSub(selected) {
     const subs = data.SUBCATEGORIES[$("fCat").value];
-    $("subField").hidden = !subs;
-    $("fSub").innerHTML = subs ? subs.map(s => `<option ${s === selected ? "selected" : ""}>${s}</option>`).join("") : "";
+    const has = subs && subs.length;
+    $("subField").hidden = !has;
+    $("fSub").innerHTML = has ? subs.map(s => `<option ${s === selected ? "selected" : ""}>${s}</option>`).join("") : "";
   }
-  $("fCat").addEventListener("change", () => updateSub());
+  $("fCat").onchange = () => updateSub();
 
-  // ===== الصورة: تصغيرها قبل الرفع =====
+  // ===== الصور =====
   async function shrink(file) {
     const url = URL.createObjectURL(file);
     try {
@@ -253,50 +309,64 @@ ${products}
       return await new Promise(ok => c.toBlob(ok, "image/jpeg", 0.85));
     } finally { URL.revokeObjectURL(url); }
   }
-  function setPreview(src) {
-    $("preview").style.backgroundImage = src ? `url("${src}")` : "";
-    $("preview").textContent = src ? "" : "بدون صورة";
+  function showPics() {
+    $("pics").innerHTML = pics.length ? pics.map((p, i) => `
+      <div class="ph" style="background-image:url('${p.url || "images/" + p.file}')">
+        <button data-rm="${i}" aria-label="حذف الصورة">×</button>${i === 0 ? "<i>رئيسية</i>" : ""}
+      </div>`).join("") : `<div class="empty-pic">بدون صورة</div>`;
   }
-  $("fImg").addEventListener("change", async e => {
-    const f = e.target.files[0];
-    if (!f) return;
-    try { imageBlob = await shrink(f); setPreview(URL.createObjectURL(imageBlob)); }
-    catch { say("ما قدرت أقرأ الصورة. جرّب صورة ثانية.", "err"); }
-  });
+  $("pics").onclick = e => {
+    const b = e.target.closest("[data-rm]");
+    if (b) { pics.splice(+b.dataset.rm, 1); showPics(); }
+  };
+  $("fImg").onchange = async e => {
+    for (const f of e.target.files) {
+      if (pics.length >= 6) { say("أقصى شي 6 صور للمنتج.", "err"); break; }
+      try { const blob = await shrink(f); pics.push({ blob, url: URL.createObjectURL(blob) }); }
+      catch { say("ما قدرت أقرأ صورة. جرّب صورة ثانية.", "err"); }
+    }
+    e.target.value = "";
+    showPics();
+  };
 
-  // ===== حفظ المنتج (جديد أو تعديل) =====
-  $("saveBtn").addEventListener("click", async () => {
+  // ===== حفظ المنتج =====
+  $("saveBtn").onclick = async () => {
     const name = $("fName").value.trim();
     const price = parseFloat($("fPrice").value);
     if (!name) return say("اكتب اسم المنتج.", "err");
     if (!(price >= 0)) return say("اكتب السعر بالأرقام.", "err");
-    if (editing < 0 && !imageBlob) return say("اختر صورة للمنتج.", "err");
+    if (!pics.length) return say("اختر صورة واحدة على الأقل.", "err");
 
     const btn = $("saveBtn");
     btn.disabled = true;
     try {
-      const old = editing >= 0 ? data.PRODUCTS[editing] : {};
-      let image = old.image || "";
-      if (imageBlob) {
-        say("جاري رفع الصورة...", "wait");
-        image = "p" + Date.now() + ".jpg";
-        const bytes = new Uint8Array(await imageBlob.arrayBuffer());
-        await putFile("images/" + image, toB64(bytes), "صورة: " + name);
+      const files = [];
+      let n = 0;
+      for (const p of pics) {
+        if (p.file) { files.push(p.file); continue; }
+        n++;
+        say(`جاري رفع الصورة ${n}...`, "wait");
+        const fileName = "p" + Date.now() + "-" + n + ".jpg";
+        await putFile("images/" + fileName, toB64(new Uint8Array(await p.blob.arrayBuffer())), "صورة: " + name);
+        files.push(fileName);
       }
+      const id = editing >= 0 ? data.PRODUCTS[editing].id : "p" + Date.now();
+      const sub = $("subField").hidden ? "" : $("fSub").value;
       const product = {
-        name, price,
+        id, name, price,
         oldPrice: parseFloat($("fOld").value) || 0,
-        category: $("fCat").value,
-        sub: data.SUBCATEGORIES[$("fCat").value] ? $("fSub").value : "",
-        image,
+        category: $("fCat").value, sub,
+        images: files,
         description: $("fDesc").value.trim(),
         isNew: $("fNew").checked,
         soldOut: $("fOut").checked,
       };
       say("جاري حفظ المنتج...", "wait");
-      await load_fresh();
-      if (editing >= 0) data.PRODUCTS[editing] = product; else data.PRODUCTS.push(product);
-      await saveProducts((editing >= 0 ? "تعديل: " : "إضافة: ") + name);
+      const fresh = await readProducts();
+      data.PRODUCTS = fresh.PRODUCTS;
+      const i = data.PRODUCTS.findIndex(p => p.id === id);
+      if (editing >= 0 && i >= 0) data.PRODUCTS[i] = product; else data.PRODUCTS.push(product);
+      await saveAll((editing >= 0 ? "تعديل: " : "إضافة: ") + name);
       resetForm();
       showList();
       say("✅ تم الحفظ! يظهر للزباين خلال دقيقة إلى ثلاث دقائق.", "ok");
@@ -305,128 +375,180 @@ ${products}
     } finally {
       btn.disabled = false;
     }
-  });
-
-  // نقرأ آخر نسخة قبل الحفظ حتى ما نضيّع تعديل سويته من الكمبيوتر
-  async function load_fresh() {
-    const file = await gh("products.js");
-    const src = b64ToText(file.content);
-    const fresh = new Function(src + `return {PRODUCTS: typeof PRODUCTS !== "undefined" ? PRODUCTS : []};`)();
-    if (editing >= 0) {
-      const target = data.PRODUCTS[editing];
-      const i = fresh.PRODUCTS.findIndex(p => p.name === target.name && p.image === target.image);
-      if (i < 0) throw new Error("المنتج تغيّر من مكان ثاني. حدّث الصفحة وجرّب من جديد.");
-      editing = i;
-    }
-    data.PRODUCTS = fresh.PRODUCTS;
-  }
+  };
 
   function resetForm() {
     editing = -1;
-    imageBlob = null;
-    ["fName", "fPrice", "fOld", "fDesc", "fImg"].forEach(id => $(id).value = "");
+    pics = [];
+    showPics();
+    ["fName", "fPrice", "fOld", "fDesc"].forEach(id => $(id).value = "");
     $("fNew").checked = true;
     $("fOut").checked = false;
-    setPreview("");
     $("formTitle").textContent = "➕ إضافة منتج جديد";
     $("saveBtn").textContent = "أضف المنتج";
     $("cancelEdit").hidden = true;
     fillCategories();
   }
-  $("cancelEdit").addEventListener("click", resetForm);
+  $("cancelEdit").onclick = resetForm;
 
   // ===== قائمة المنتجات =====
-  let armed = -1;
+  let armed = "";
   function showList() {
     $("count").textContent = data.PRODUCTS.length;
-    $("list").innerHTML = data.PRODUCTS.map((p, i) => `
+    $("list").innerHTML = data.PRODUCTS.map(p => `
       <div class="item">
-        ${p.image ? `<img src="images/${p.image}" alt="" onerror="this.outerHTML='<div class=noimg></div>'">` : `<div class="noimg"></div>`}
+        ${p.images[0] ? `<img src="images/${p.images[0]}" alt="" onerror="this.outerHTML='<div class=noimg></div>'">` : `<div class="noimg"></div>`}
         <div>
           <b>${p.name}${p.isNew ? '<span class="tag new">جديد</span>' : ""}${p.soldOut ? '<span class="tag">نفدت</span>' : ""}</b>
-          <small>${p.price} د.ل · ${p.category}${p.sub ? " · " + p.sub : ""}</small>
+          <small>${p.price} د.ل · ${p.category}${p.sub ? " · " + p.sub : ""} · 📸 ${p.images.length}</small>
         </div>
         <div class="acts">
-          <button data-act="edit" data-i="${i}">✏️ تعديل</button>
-          <button data-act="out" data-i="${i}">${p.soldOut ? "✅ رجع متوفر" : "⛔ نفدت الكمية"}</button>
-          <button data-act="del" data-i="${i}" class="del ${armed === i ? "arm" : ""}">${armed === i ? "متأكد؟ اضغط للحذف" : "🗑️ حذف"}</button>
+          <button data-act="edit" data-id="${p.id}">✏️ تعديل</button>
+          <button data-act="out" data-id="${p.id}">${p.soldOut ? "✅ رجع متوفر" : "⛔ نفدت الكمية"}</button>
+          <button data-act="del" data-id="${p.id}" class="del ${armed === p.id ? "arm" : ""}">${armed === p.id ? "متأكد؟ اضغط للحذف" : "🗑️ حذف"}</button>
         </div>
       </div>`).reverse().join("");
   }
 
-  $("list").addEventListener("click", async e => {
+  $("list").onclick = async e => {
     const b = e.target.closest("button");
     if (!b) return;
-    const i = +b.dataset.i;
-    const p = data.PRODUCTS[i];
+    const id = b.dataset.id;
+    const p = data.PRODUCTS.find(x => x.id === id);
 
     if (b.dataset.act === "edit") {
-      editing = i;
-      imageBlob = null;
+      editing = data.PRODUCTS.indexOf(p);
+      pics = p.images.map(file => ({ file }));
+      showPics();
       $("fName").value = p.name;
       $("fPrice").value = p.price;
       $("fOld").value = p.oldPrice || "";
-      $("fCat").value = p.category;
-      updateSub(p.sub);
+      fillCategories(p.category, p.sub);
       $("fDesc").value = p.description || "";
       $("fNew").checked = !!p.isNew;
       $("fOut").checked = !!p.soldOut;
-      setPreview(p.image ? "images/" + p.image : "");
       $("formTitle").textContent = "✏️ تعديل: " + p.name;
       $("saveBtn").textContent = "احفظ التعديل";
       $("cancelEdit").hidden = false;
       $("formBox").scrollIntoView({ behavior: "smooth" });
       return;
     }
-
-    if (b.dataset.act === "del" && armed !== i) {
-      armed = i;
+    if (b.dataset.act === "del" && armed !== id) {
+      armed = id;
       showList();
-      setTimeout(() => { if (armed === i) { armed = -1; showList(); } }, 4000);
+      setTimeout(() => { if (armed === id) { armed = ""; showList(); } }, 4000);
       return;
     }
-
     try {
       b.disabled = true;
       say("جاري الحفظ...", "wait");
-      editing = i;
-      await load_fresh();
-      const idx = editing;
-      editing = -1;
-      if (b.dataset.act === "out") data.PRODUCTS[idx].soldOut = !data.PRODUCTS[idx].soldOut;
-      if (b.dataset.act === "del") data.PRODUCTS.splice(idx, 1);
-      armed = -1;
-      await saveProducts((b.dataset.act === "del" ? "حذف: " : "تحديث: ") + p.name);
+      const fresh = await readProducts();
+      data.PRODUCTS = fresh.PRODUCTS;
+      const i = data.PRODUCTS.findIndex(x => x.id === id || (x.name === p.name && x.images[0] === p.images[0]));
+      if (i < 0) throw new Error("المنتج تغيّر من مكان ثاني. حدّث الصفحة وجرّب من جديد.");
+      if (b.dataset.act === "out") data.PRODUCTS[i].soldOut = !data.PRODUCTS[i].soldOut;
+      if (b.dataset.act === "del") data.PRODUCTS.splice(i, 1);
+      armed = "";
+      await saveAll((b.dataset.act === "del" ? "حذف: " : "تحديث: ") + p.name);
       showList();
       say("✅ تم! يظهر للزباين خلال دقيقة إلى ثلاث دقائق.", "ok");
     } catch (err) {
-      editing = -1;
       say("❌ " + err.message, "err");
       showList();
     }
-  });
+  };
+
+  // ===== الإعدادات =====
+  let catRows = [];   // {old, name, subs}
+  function showSettings() {
+    $("sPhone").value = data.PHONE;
+    $("sInsta").value = data.INSTAGRAM;
+    $("sTiktok").value = data.TIKTOK;
+    catRows = data.CATEGORIES.map(c => ({ old: c, name: c, subs: (data.SUBCATEGORIES[c] || []).join("، ") }));
+    drawCats();
+  }
+  function drawCats() {
+    $("cats").innerHTML = catRows.map((r, i) => {
+      const used = data.PRODUCTS.filter(p => p.category === r.old).length;
+      return `<div class="cat-row">
+        <input data-i="${i}" data-k="name" value="${r.name.replace(/"/g, "&quot;")}" placeholder="اسم القسم">
+        <button class="rm" data-rmcat="${i}" aria-label="حذف القسم">🗑️</button>
+        <input class="subs" data-i="${i}" data-k="subs" value="${r.subs.replace(/"/g, "&quot;")}" placeholder="أقسام فرعية (اختياري): حلا، مها">
+        ${r.old ? `<small>${used} منتج في هذا القسم</small>` : ""}
+      </div>`;
+    }).join("");
+  }
+  $("cats").oninput = e => {
+    const t = e.target;
+    if (t.dataset.k) catRows[+t.dataset.i][t.dataset.k] = t.value;
+  };
+  $("cats").onclick = e => {
+    const b = e.target.closest("[data-rmcat]");
+    if (!b) return;
+    const r = catRows[+b.dataset.rmcat];
+    const used = data.PRODUCTS.filter(p => p.category === r.old).length;
+    if (used) return say(`ما تقدر تحذف "${r.old}" لأن فيه ${used} منتج. انقلهم لقسم ثاني أو احذفهم أول.`, "err");
+    catRows.splice(+b.dataset.rmcat, 1);
+    drawCats();
+  };
+  $("addCat").onclick = () => { catRows.push({ old: "", name: "", subs: "" }); drawCats(); };
+
+  $("saveSettings").onclick = async () => {
+    const rows = catRows.map(r => ({ ...r, name: r.name.trim() })).filter(r => r.name);
+    if (!rows.length) return say("لازم يكون فيه قسم واحد على الأقل.", "err");
+    const btn = $("saveSettings");
+    btn.disabled = true;
+    try {
+      say("جاري حفظ الإعدادات...", "wait");
+      const fresh = await readProducts();
+      data.PRODUCTS = fresh.PRODUCTS;
+      // لو غيّرت اسم قسم، المنتجات اللي فيه تنتقل للاسم الجديد
+      rows.forEach(r => {
+        if (r.old && r.old !== r.name) data.PRODUCTS.forEach(p => { if (p.category === r.old) p.category = r.name; });
+      });
+      data.PHONE = $("sPhone").value.trim();
+      data.INSTAGRAM = $("sInsta").value.trim();
+      data.TIKTOK = $("sTiktok").value.trim();
+      data.CATEGORIES = rows.map(r => r.name);
+      data.SUBCATEGORIES = {};
+      rows.forEach(r => {
+        const subs = r.subs.split(/[,،]/).map(s => s.trim()).filter(Boolean);
+        if (subs.length) data.SUBCATEGORIES[r.name] = subs;
+      });
+      await saveAll("تحديث الإعدادات");
+      showSettings();
+      fillCategories();
+      showList();
+      say("✅ تم حفظ الإعدادات! تظهر للزباين خلال دقيقة إلى ثلاث دقائق.", "ok");
+    } catch (e) {
+      say("❌ " + e.message, "err");
+    } finally {
+      btn.disabled = false;
+    }
+  };
 
   // ===== المفتاح =====
-  $("saveToken").addEventListener("click", async () => {
+  $("saveToken").onclick = async () => {
     token = $("token").value.trim();
     if (!token) return say("الصق المفتاح أول.", "err");
     try {
       await load();
       try { localStorage.setItem("sofia-token", token); } catch (e) {}
       $("keyBox").hidden = true;
-      say("✅ تم حفظ المفتاح. تقدر تضيف منتجات الحين.", "ok");
+      say("✅ تم حفظ المفتاح.", "ok");
     } catch (e) {
       say("❌ " + e.message, "err");
     }
-  });
-  $("forget").addEventListener("click", e => {
+  };
+  $("forget").onclick = e => {
     e.preventDefault();
     try { localStorage.removeItem("sofia-token"); } catch (err) {}
     location.reload();
-  });
+  };
 
   // ===== البداية =====
   $("fNew").checked = true;
+  showPics();
   if (token) {
     load().catch(e => { say("❌ " + e.message, "err"); $("keyBox").hidden = false; });
   } else {

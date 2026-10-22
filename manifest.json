@@ -1,0 +1,13 @@
+{
+  "name": "SOFIA صوفيه لتسويق مواد الزينة",
+  "short_name": "SOFIA",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FCF8F6",
+  "theme_color": "#B03A6B",
+  "icons": [
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
