@@ -47,4 +47,15 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
+  {
+    id: "p1792641038435",
+    name: "غعهف",
+    price: 99,
+    oldPrice: 0,
+    category: "مجففات الشعر",
+    images: ["p1792641035923-1.jpg"],
+    description: "",
+    isNew: true,
+    soldOut: false,
+  },
 ];
