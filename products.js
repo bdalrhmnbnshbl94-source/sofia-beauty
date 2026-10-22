@@ -22,7 +22,7 @@ const PRODUCTS = [
     oldPrice: 0,
     category: "مجففات الشعر",
     sub: "هومر",
-    images: ["p1792685829132-1.jpg"],
+    images: ["p1792686252807-1.jpg"],
     description: "",
     isNew: true,
     soldOut: false,
