@@ -36,15 +36,4 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
-  {
-    id: "p1792640886212",
-    name: "ال",
-    price: 66,
-    oldPrice: 0,
-    category: "مجففات الشعر",
-    images: ["p1792640883881-1.jpg"],
-    description: "",
-    isNew: true,
-    soldOut: false,
-  },
 ];
