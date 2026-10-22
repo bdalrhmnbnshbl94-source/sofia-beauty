@@ -51,4 +51,16 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
+  {
+    id: "p1792690984192",
+    name: "مجفف شعر هومر 2400 واط",
+    price: 220,
+    oldPrice: 0,
+    category: "مجففات الشعر",
+    sub: "هومر",
+    images: ["p1792690979530-1.jpg"],
+    description: "",
+    isNew: true,
+    soldOut: false,
+  },
 ];
