@@ -71,7 +71,7 @@ const PRODUCTS = [
     category: "مصففات الشعر",
     images: ["p1792692197783-1.jpg"],
     description: "مصفف شعر بتصميم رفيع ومقبض قابل للقفل",
-    isNew: true,
+    isNew: false,
     soldOut: false,
   },
   {
