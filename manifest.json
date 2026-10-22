@@ -1,9 +1,10 @@
 {
+  "id": "sofia-shop",
   "name": "SOFIA صوفيه لتسويق مواد الزينة",
   "short_name": "SOFIA",
   "lang": "ar",
   "dir": "rtl",
-    "start_url": "index.html",
+  "start_url": "index.html",
   "scope": "index.html",
   "display": "standalone",
   "background_color": "#FCF8F6",
