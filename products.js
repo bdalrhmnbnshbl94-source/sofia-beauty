@@ -107,4 +107,15 @@ const PRODUCTS = [
     isNew: false,
     soldOut: false,
   },
+  {
+    id: "p1792692987256",
+    name: "مصفف شعر 063",
+    price: 78,
+    oldPrice: 0,
+    category: "مصففات الشعر",
+    images: ["p1792692983520-1.jpg"],
+    description: "مصفف شعر ( فير ) بغلاف من السيراميك أو التورمالين ومؤشر ضوئي للتشغيل",
+    isNew: false,
+    soldOut: false,
+  },
 ];
