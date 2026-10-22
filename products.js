@@ -14,15 +14,5 @@ const SUBCATEGORIES = {
 
 // ================== المنتجات ==================
 const PRODUCTS = [
-  {
-    id: "p1792638697199",
-    name: "اان",
-    price: 96,
-    oldPrice: 0,
-    category: "ماكينات حلاقة",
-    images: ["p1792638692117-1.jpg","p1792638694636-2.jpg"],
-    description: "",
-    isNew: true,
-    soldOut: false,
-  },
+
 ];
