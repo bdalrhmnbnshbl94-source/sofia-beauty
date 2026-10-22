@@ -27,4 +27,15 @@ const PRODUCTS = [
     isNew: true,
     soldOut: false,
   },
+  {
+    id: "p1792686151926",
+    name: "هاث",
+    price: 59,
+    oldPrice: 0,
+    category: "مصففات الشعر",
+    images: ["p1792686149165-1.jpg"],
+    description: "",
+    isNew: true,
+    soldOut: false,
+  },
 ];
