@@ -118,4 +118,15 @@ const PRODUCTS = [
     isNew: false,
     soldOut: false,
   },
+  {
+    id: "p1792693567727",
+    name: "مصفف شعر 056",
+    price: 196,
+    oldPrice: 0,
+    category: "مصففات الشعر",
+    images: ["p1792693563151-1.jpg"],
+    description: "مصفف شعر بألواح من السيراميك و 230 درجة مئوية و 50 واط",
+    isNew: false,
+    soldOut: true,
+  },
 ];
