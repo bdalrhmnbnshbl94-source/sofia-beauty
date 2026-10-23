@@ -76,6 +76,8 @@ const PRODUCTS = [
     name: "مصصف شعر  059",
     price: 144,
     oldPrice: 0,
+    boxPrice: 1728,
+    boxCount: 12,
     category: "مصففات الشعر",
     images: ["p1792692197783-1.jpg"],
     description: "مصفف شعر بتصميم رفيع ومقبض قابل للقفل",
