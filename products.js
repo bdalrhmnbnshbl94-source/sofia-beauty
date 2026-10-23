@@ -18,9 +18,9 @@ const PRODUCTS = [
   {
     id: "p1792685832369",
     name: "مجفف شعر هومر 1800 واط",
-    price: 144,
+    price: 148,
     oldPrice: 0,
-    boxPrice: 1728,
+    boxPrice: 1776,
     boxCount: 12,
     category: "مجففات الشعر",
     sub: "هومر",
