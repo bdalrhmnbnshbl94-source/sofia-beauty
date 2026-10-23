@@ -128,6 +128,8 @@ const PRODUCTS = [
     name: "مصفف شعر 063",
     price: 78,
     oldPrice: 0,
+    boxPrice: 936,
+    boxCount: 12,
     category: "مصففات الشعر",
     images: ["p1792692983520-1.jpg"],
     description: "مصفف شعر ( فير ) بغلاف من السيراميك أو التورمالين ومؤشر ضوئي للتشغيل",
