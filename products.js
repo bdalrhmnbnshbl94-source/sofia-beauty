@@ -102,6 +102,8 @@ const PRODUCTS = [
     name: "مصفف شعر 061",
     price: 134,
     oldPrice: 0,
+    boxPrice: 1608,
+    boxCount: 12,
     category: "مصففات الشعر",
     images: ["p1792692592631-1.jpg"],
     description: "مصفف شعر مع مقبض قابل للقفل ، عنصر التسخين من PTC",
