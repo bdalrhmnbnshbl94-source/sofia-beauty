@@ -48,6 +48,8 @@ const PRODUCTS = [
     name: "مجفف شعر هومر 2300 واط",
     price: 208,
     oldPrice: 0,
+    boxPrice: 2496,
+    boxCount: 12,
     category: "مجففات الشعر",
     sub: "هومر",
     images: ["p1792690935220-1.jpg"],
