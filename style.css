@@ -194,6 +194,7 @@ dialog.cart{width:min(480px,calc(100% - 24px))}
 .toast[hidden]{display:none}
 .cart-btn[hidden],.order[hidden],.clear[hidden]{display:none}
 dialog{max-height:calc(100% - 32px);overflow-y:auto}
+
 /* ===== شاشة الترحيب ===== */
 .splash{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:24px;
   background:radial-gradient(circle at 50% 42%,#fff 0,var(--rose-soft) 70%);
@@ -207,3 +208,14 @@ dialog{max-height:calc(100% - 32px);overflow-y:auto}
 @keyframes splashOut{to{opacity:0;visibility:hidden;pointer-events:none}}
 .seen .splash{display:none}
 @media (prefers-reduced-motion:reduce){.splash{animation-delay:.6s}.splash img,.splash p{animation:none}}
+
+/* ===== أسعار الدستة والصندوق ===== */
+.more-prices{flex-basis:100%;display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--muted);margin-top:4px}
+.more-prices b{color:var(--ink)}
+.more-prices s{font-size:11px}
+.prices{flex-wrap:wrap}
+.units{display:grid;gap:8px;margin:4px 0 10px}
+.unit{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.unit span{flex:1}
+.unit:has(input:checked){border-color:var(--rose);background:var(--rose-soft)}
+.unit input{accent-color:var(--rose)}

@@ -48,6 +48,9 @@
     .item .acts .del.arm{background:#b4472e;color:#fff}
     .tag{font-size:11px;border-radius:999px;padding:1px 8px;margin-inline-start:4px;color:#fff;background:#4a3a40}
     .tag.new{background:var(--gold)}
+    .extra{border:1px dashed var(--line);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+    .extra summary{cursor:pointer;color:var(--rose);font-weight:700;font-size:14px}
+    .extra[open] summary{margin-bottom:10px}
     .cat-row{display:grid;grid-template-columns:1fr 36px;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
     .cat-row .subs{grid-column:1/-1;font-size:14px}
     .cat-row .rm{border:0;border-radius:10px;background:#fde8e4;color:#b4472e;font-size:16px;cursor:pointer}
@@ -95,6 +98,26 @@
           <input id="fOld" type="number" inputmode="decimal" min="0" placeholder="اتركه فاضي">
         </div>
       </div>
+      <details class="extra" id="extra">
+        <summary>➕ سعر الدستة والصندوق والخصم (اختياري)</summary>
+        <div class="row">
+          <div class="field">سعر الدستة (12 حبة)
+            <input id="fDozen" type="number" inputmode="decimal" min="0" placeholder="اتركه فاضي">
+          </div>
+          <div class="field">سعر الصندوق
+            <input id="fBox" type="number" inputmode="decimal" min="0" placeholder="اتركه فاضي">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">كم حبة في الصندوق؟
+            <input id="fBoxCount" type="number" inputmode="numeric" min="0" placeholder="مثلاً 24">
+          </div>
+          <div class="field">خصم بالنسبة %
+            <input id="fDisc" type="number" inputmode="decimal" min="0" max="90" placeholder="مثلاً 10">
+          </div>
+        </div>
+        <p class="hint">الخصم ينطبق على كل الأسعار (الحبة والدستة والصندوق).</p>
+      </details>
       <div class="field">القسم
         <select id="fCat"></select>
       </div>
@@ -246,7 +269,7 @@
     id: ${q(p.id)},
     name: ${q(p.name || "")},
     price: ${Number(p.price) || 0},
-    oldPrice: ${Number(p.oldPrice) || 0},
+    oldPrice: ${Number(p.oldPrice) || 0},${Number(p.dozenPrice) > 0 ? `\n    dozenPrice: ${Number(p.dozenPrice)},` : ""}${Number(p.boxPrice) > 0 ? `\n    boxPrice: ${Number(p.boxPrice)},` : ""}${Number(p.boxCount) > 0 ? `\n    boxCount: ${Number(p.boxCount)},` : ""}${Number(p.discount) > 0 ? `\n    discount: ${Number(p.discount)},` : ""}
     category: ${q(p.category || "")},${p.sub ? `\n    sub: ${q(p.sub)},` : ""}
     images: ${q(p.images || [])},
     description: ${q(p.description || "")},
@@ -358,6 +381,10 @@ ${products}
       const product = {
         id, name, price,
         oldPrice: parseFloat($("fOld").value) || 0,
+        dozenPrice: parseFloat($("fDozen").value) || 0,
+        boxPrice: parseFloat($("fBox").value) || 0,
+        boxCount: parseInt($("fBoxCount").value) || 0,
+        discount: Math.min(parseFloat($("fDisc").value) || 0, 90),
         category: $("fCat").value, sub,
         images: files,
         description: $("fDesc").value.trim(),
@@ -384,7 +411,8 @@ ${products}
     editing = -1;
     pics = [];
     showPics();
-    ["fName", "fPrice", "fOld", "fDesc"].forEach(id => $(id).value = "");
+    ["fName", "fPrice", "fOld", "fDesc", "fDozen", "fBox", "fBoxCount", "fDisc"].forEach(id => $(id).value = "");
+    $("extra").open = false;
     $("fNew").checked = true;
     $("fOut").checked = false;
     $("formTitle").textContent = "➕ إضافة منتج جديد";
@@ -403,7 +431,7 @@ ${products}
         ${p.images[0] ? `<img src="images/${p.images[0]}" alt="" onerror="this.outerHTML='<div class=noimg></div>'">` : `<div class="noimg"></div>`}
         <div>
           <b>${p.name}${p.isNew ? '<span class="tag new">جديد</span>' : ""}${p.soldOut ? '<span class="tag">نفدت</span>' : ""}</b>
-          <small>${p.price} د.ل · ${p.category}${p.sub ? " · " + p.sub : ""} · 📸 ${p.images.length}</small>
+          <small>${p.price} د.ل${p.dozenPrice ? " · دستة " + p.dozenPrice : ""}${p.boxPrice ? " · صندوق " + p.boxPrice : ""}${p.discount ? " · خصم " + p.discount + "%" : ""} · ${p.category}${p.sub ? " · " + p.sub : ""} · 📸 ${p.images.length}</small>
         </div>
         <div class="acts">
           <button data-act="edit" data-id="${p.id}">✏️ تعديل</button>
@@ -426,6 +454,11 @@ ${products}
       $("fName").value = p.name;
       $("fPrice").value = p.price;
       $("fOld").value = p.oldPrice || "";
+      $("fDozen").value = p.dozenPrice || "";
+      $("fBox").value = p.boxPrice || "";
+      $("fBoxCount").value = p.boxCount || "";
+      $("fDisc").value = p.discount || "";
+      $("extra").open = !!(p.dozenPrice || p.boxPrice || p.discount);
       fillCategories(p.category, p.sub);
       $("fDesc").value = p.description || "";
       $("fNew").checked = !!p.isNew;

@@ -31,7 +31,7 @@
   <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
-    <!-- شاشة الترحيب (تظهر مرة وحدة كل زيارة) -->
+  <!-- شاشة الترحيب (تظهر مرة وحدة كل زيارة) -->
   <script>
     try { if (sessionStorage.getItem("sofia-splash")) document.documentElement.classList.add("seen");
           sessionStorage.setItem("sofia-splash", "1"); } catch (e) {}
@@ -141,14 +141,30 @@
     const img = (file, name) => `<img src="images/${file}" alt="${name}" loading="lazy"
         onerror="this.outerHTML='<span class=letter>${name[0]}</span>'">`;
     const firstPic = p => p.images.length ? img(p.images[0], p.name) : `<span class="letter">${p.name[0]}</span>`;
+    // ===== الأسعار: حبة / دستة / صندوق + خصم بالنسبة =====
+    const pct = p => Math.min(Math.max(Number(p.discount) || 0, 0), 90);
+    const money = v => Math.round(v * 100) / 100;
+    const afterDisc = (p, v) => money(v * (1 - pct(p) / 100));
+    function units(p) {
+      const u = [{ key: "piece", label: "حبة", price: p.price }];
+      if (p.dozenPrice > 0) u.push({ key: "dozen", label: "دستة (12 حبة)", price: p.dozenPrice });
+      if (p.boxPrice > 0) u.push({ key: "box", label: p.boxCount > 0 ? `صندوق (${p.boxCount} حبة)` : "صندوق", price: p.boxPrice });
+      return u.map(x => ({ ...x, final: afterDisc(p, x.price) }));
+    }
+    const unitOf = (p, key) => units(p).find(u => u.key === key) || units(p)[0];
     function priceHTML(p) {
-      let h = `<span class="price">${p.price} <small>د.ل</small></span>`;
-      if (p.oldPrice > p.price) h += ` <s class="old">${p.oldPrice}</s>`;
+      const u = units(p);
+      let h = `<span class="price">${u[0].final} <small>د.ل</small></span>`;
+      if (pct(p)) h += ` <s class="old">${u[0].price}</s>`;
+      else if (p.oldPrice > p.price) h += ` <s class="old">${p.oldPrice}</s>`;
+      if (u.length > 1) h += `<div class="more-prices">${u.slice(1).map(x =>
+        `<span>${x.label}: <b>${x.final}</b> د.ل${pct(p) ? ` <s>${x.price}</s>` : ""}</span>`).join("")}</div>`;
       return h;
     }
     function badges(p) {
       let h = "";
       if (p.soldOut) h += `<span class="badge out">نفدت الكمية</span>`;
+      else if (pct(p)) h += `<span class="badge sale">خصم ${pct(p)}%</span>`;
       else if (p.oldPrice > p.price) h += `<span class="badge sale">تخفيض</span>`;
       if (p.isNew) h += `<span class="badge new">جديد</span>`;
       if (p.images.length > 1) h += `<span class="badge pics">📸 ${p.images.length}</span>`;
@@ -157,7 +173,19 @@
     const catLabel = p => p.sub ? p.category + " · " + p.sub : p.category;
     function addButton(p) {
       if (p.soldOut) return `<span class="order disabled">غير متوفر حالياً</span>`;
+      if (units(p).length > 1) return `<button class="order add" data-pick="${p.id}">🛒 اختر الكمية وأضف</button>`;
       return `<button class="order add" data-add="${p.id}">🛒 أضف للسلة</button>`;
+    }
+    // داخل نافذة المنتج: اختيار حبة / دستة / صندوق
+    function unitPicker(p) {
+      if (p.soldOut) return addButton(p);
+      const u = units(p);
+      if (u.length < 2) return addButton(p);
+      return `<div class="units" id="units">${u.map((x, i) => `
+          <label class="unit"><input type="radio" name="unit" value="${x.key}" ${i ? "" : "checked"}>
+            <span>${x.label}</span><b>${x.final} د.ل</b></label>`).join("")}
+        </div>
+        <button class="order add" data-add="${p.id}" data-from-picker>🛒 أضف للسلة</button>`;
     }
     function toast(text) {
       const t = $("toast");
@@ -228,8 +256,8 @@
           <h2>${p.name}</h2>
           <p>${p.description || ""}</p>
           <div class="prices">${priceHTML(p)}</div>
-          ${addButton(p)}
-          ${p.soldOut ? "" : `<a class="order ghost" target="_blank" href="${waLink("مرحباً، أبي أطلب: " + p.name + " – " + p.price + " د.ل")}" onclick="track('طلب-مباشر/${p.name}')">اطلب الآن على واتساب</a>`}
+          ${unitPicker(p)}
+          ${p.soldOut ? "" : `<a class="order ghost" target="_blank" href="${waLink("مرحباً، أبي أطلب: " + p.name + " – " + units(p)[0].final + " د.ل")}" onclick="track('طلب-مباشر/${p.name}')">اطلب الآن على واتساب</a>`}
           <button class="share" data-share="${p.id}">🔗 شارك المنتج</button>
         </div>`;
       const slider = $("slider"), dots = $("dots");
@@ -243,6 +271,8 @@
     }
     $("grid").onclick = e => {
       if (e.target.closest("[data-add]")) return;
+      const pick = e.target.closest("[data-pick]");
+      if (pick) return openProduct(byId(pick.dataset.pick));
       const c = e.target.closest(".card");
       if (c) openProduct(byId(c.dataset.id));
     };
@@ -251,7 +281,7 @@
     // ===== المشاركة =====
     async function share(p) {
       const url = location.origin + location.pathname + "#p-" + p.id;
-      const text = p.name + " – " + p.price + " د.ل";
+      const text = p.name + " – " + units(p)[0].final + " د.ل";
       track("مشاركة/" + p.name);
       if (navigator.share) {
         try { await navigator.share({ title: "SOFIA", text, url }); } catch (e) {}
@@ -265,44 +295,53 @@
     let cart = {};
     try { cart = JSON.parse(localStorage.getItem("sofia-cart") || "{}"); } catch (e) {}
     const saveCart = () => { try { localStorage.setItem("sofia-cart", JSON.stringify(cart)); } catch (e) {} };
+    // مفتاح السلة = رقم المنتج | نوع الكمية (حبة / دستة / صندوق)
     function cartList() {
-      return Object.entries(cart)
-        .map(([id, qty]) => ({ p: byId(id), qty }))
-        .filter(x => x.p && !x.p.soldOut && x.qty > 0);
+      return Object.entries(cart).map(([key, qty]) => {
+        const [id, unitKey = "piece"] = key.split("|");
+        const p = byId(id);
+        return p && { key, p, qty, u: unitOf(p, unitKey) };
+      }).filter(x => x && !x.p.soldOut && x.qty > 0);
     }
     function updateCart() {
       const items = cartList();
-      cart = Object.fromEntries(items.map(x => [x.p.id, x.qty]));
+      cart = Object.fromEntries(items.map(x => [x.key, x.qty]));
       saveCart();
+      const name = x => x.u.key === "piece" ? x.p.name : `${x.p.name} – ${x.u.label}`;
       const count = items.reduce((s, x) => s + x.qty, 0);
-      const total = items.reduce((s, x) => s + x.qty * x.p.price, 0);
+      const total = money(items.reduce((s, x) => s + x.qty * x.u.final, 0));
       $("cartCount").textContent = count;
       $("cartBtn").hidden = count === 0;
       $("cartTotal").textContent = total;
       $("cartItems").innerHTML = items.length ? items.map(x => `
         <div class="c-item">
           <div class="c-pic">${firstPic(x.p)}</div>
-          <div class="c-info"><b>${x.p.name}</b><small>${x.p.price} د.ل</small></div>
+          <div class="c-info"><b>${name(x)}</b><small>${x.u.final} د.ل</small></div>
           <div class="qty">
-            <button data-plus="${x.p.id}">+</button><span>${x.qty}</span><button data-minus="${x.p.id}">−</button>
+            <button data-plus="${x.key}">+</button><span>${x.qty}</span><button data-minus="${x.key}">−</button>
           </div>
         </div>`).join("") : `<p class="empty">السلة فاضية</p>`;
       const msg = "مرحباً، أبي أطلب من صوفيه:\n" +
-        items.map(x => `• ${x.p.name} × ${x.qty} = ${x.qty * x.p.price} د.ل`).join("\n") +
+        items.map(x => `• ${name(x)} × ${x.qty} = ${money(x.qty * x.u.final)} د.ل`).join("\n") +
         `\n\nالمجموع: ${total} د.ل`;
       $("sendOrder").href = waLink(msg);
       $("sendOrder").hidden = !items.length;
       $("clearCart").hidden = !items.length;
     }
-    function addToCart(id) {
-      cart[id] = (cart[id] || 0) + 1;
+    function addToCart(id, unitKey = "piece") {
+      const key = id + "|" + unitKey;
+      cart[key] = (cart[key] || 0) + 1;
       updateCart();
       toast("✅ أُضيف للسلة");
       track("سلة/" + byId(id).name);
     }
     document.addEventListener("click", e => {
       const add = e.target.closest("[data-add]");
-      if (add) { e.stopPropagation(); addToCart(add.dataset.add); }
+      if (add) {
+        e.stopPropagation();
+        const chosen = add.hasAttribute("data-from-picker") && document.querySelector('#units input:checked');
+        addToCart(add.dataset.add, chosen ? chosen.value : "piece");
+      }
       const sh = e.target.closest("[data-share]");
       if (sh) share(byId(sh.dataset.share));
       const plus = e.target.closest("[data-plus]");
