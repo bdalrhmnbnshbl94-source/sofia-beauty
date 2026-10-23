@@ -214,17 +214,4 @@ const PRODUCTS = [
     isNew: false,
     soldOut: true,
   },
-  {
-    id: "p1792725959570",
-    name: "ثرية",
-    price: 100,
-    oldPrice: 0,
-    discount: 10,
-    category: "فرش شعر",
-    sub: "حلا",
-    images: ["p1792725956989-1.jpg"],
-    description: "",
-    isNew: true,
-    soldOut: false,
-  },
 ];
