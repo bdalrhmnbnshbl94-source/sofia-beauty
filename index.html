@@ -141,14 +141,14 @@
     const img = (file, name) => `<img src="images/${file}" alt="${name}" loading="lazy"
         onerror="this.outerHTML='<span class=letter>${name[0]}</span>'">`;
     const firstPic = p => p.images.length ? img(p.images[0], p.name) : `<span class="letter">${p.name[0]}</span>`;
-    // ===== الأسعار: حبة / دستة / صندوق + خصم بالنسبة =====
+    // ===== الأسعار: قطعة / دستة / صندوق + خصم بالنسبة =====
     const pct = p => Math.min(Math.max(Number(p.discount) || 0, 0), 90);
     const money = v => Math.round(v * 100) / 100;
     const afterDisc = (p, v) => money(v * (1 - pct(p) / 100));
     function units(p) {
-      const u = [{ key: "piece", label: "حبة", price: p.price }];
-      if (p.dozenPrice > 0) u.push({ key: "dozen", label: "دستة (12 حبة)", price: p.dozenPrice });
-      if (p.boxPrice > 0) u.push({ key: "box", label: p.boxCount > 0 ? `صندوق (${p.boxCount} حبة)` : "صندوق", price: p.boxPrice });
+      const u = [{ key: "piece", label: "قطعة", price: p.price }];
+            if (p.dozenPrice > 0) u.push({ key: "dozen", label: p.dozenCount > 0 ? `دستة (${p.dozenCount} قطعة)` : "دستة", price: p.dozenPrice });
+      if (p.boxPrice > 0) u.push({ key: "box", label: p.boxCount > 0 ? `صندوق (${p.boxCount} قطعة)` : "صندوق", price: p.boxPrice });
       return u.map(x => ({ ...x, final: afterDisc(p, x.price) }));
     }
     const unitOf = (p, key) => units(p).find(u => u.key === key) || units(p)[0];
@@ -176,7 +176,7 @@
       if (units(p).length > 1) return `<button class="order add" data-pick="${p.id}">🛒 اختر الكمية وأضف</button>`;
       return `<button class="order add" data-add="${p.id}">🛒 أضف للسلة</button>`;
     }
-    // داخل نافذة المنتج: اختيار حبة / دستة / صندوق
+    // داخل نافذة المنتج: اختيار قطعة / دستة / صندوق
     function unitPicker(p) {
       if (p.soldOut) return addButton(p);
       const u = units(p);
@@ -257,7 +257,7 @@
           <p>${p.description || ""}</p>
           <div class="prices">${priceHTML(p)}</div>
           ${unitPicker(p)}
-          ${p.soldOut ? "" : `<a class="order ghost" target="_blank" href="${waLink("مرحباً، أبي أطلب: " + p.name + " – " + units(p)[0].final + " د.ل")}" onclick="track('طلب-مباشر/${p.name}')">اطلب الآن على واتساب</a>`}
+          ${p.soldOut ? "" : `<a class="order ghost" target="_blank" href="${waLink("مرحباً، أريد أن أطلب: " + p.name + " – " + units(p)[0].final + " د.ل")}" onclick="track('طلب-مباشر/${p.name}')">اطلب الآن على واتساب</a>`}
           <button class="share" data-share="${p.id}">🔗 شارك المنتج</button>
         </div>`;
       const slider = $("slider"), dots = $("dots");
@@ -295,7 +295,7 @@
     let cart = {};
     try { cart = JSON.parse(localStorage.getItem("sofia-cart") || "{}"); } catch (e) {}
     const saveCart = () => { try { localStorage.setItem("sofia-cart", JSON.stringify(cart)); } catch (e) {} };
-    // مفتاح السلة = رقم المنتج | نوع الكمية (حبة / دستة / صندوق)
+    // مفتاح السلة = رقم المنتج | نوع الكمية (قطعة / دستة / صندوق)
     function cartList() {
       return Object.entries(cart).map(([key, qty]) => {
         const [id, unitKey = "piece"] = key.split("|");
@@ -321,7 +321,7 @@
             <button data-plus="${x.key}">+</button><span>${x.qty}</span><button data-minus="${x.key}">−</button>
           </div>
         </div>`).join("") : `<p class="empty">السلة فاضية</p>`;
-      const msg = "مرحباً، أبي أطلب من صوفيه:\n" +
+      const msg = "مرحباً، أريد أن أطلب من صوفيه:\n" +
         items.map(x => `• ${name(x)} × ${x.qty} = ${money(x.qty * x.u.final)} د.ل`).join("\n") +
         `\n\nالمجموع: ${total} د.ل`;
       $("sendOrder").href = waLink(msg);

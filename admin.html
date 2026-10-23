@@ -101,22 +101,25 @@
       <details class="extra" id="extra">
         <summary>➕ سعر الدستة والصندوق والخصم (اختياري)</summary>
         <div class="row">
-          <div class="field">سعر الدستة (12 حبة)
+          <div class="field">سعر الدستة
             <input id="fDozen" type="number" inputmode="decimal" min="0" placeholder="اتركه فاضي">
           </div>
-          <div class="field">سعر الصندوق
-            <input id="fBox" type="number" inputmode="decimal" min="0" placeholder="اتركه فاضي">
+          <div class="field">كم قطعة في الدستة؟
+            <input id="fDozenCount" type="number" inputmode="numeric" min="0" placeholder="مثلاً 12">
           </div>
         </div>
         <div class="row">
-          <div class="field">كم حبة في الصندوق؟
+          <div class="field">سعر الصندوق
+            <input id="fBox" type="number" inputmode="decimal" min="0" placeholder="اتركه فاضي">
+          </div>
+          <div class="field">كم قطعة في الصندوق؟
             <input id="fBoxCount" type="number" inputmode="numeric" min="0" placeholder="مثلاً 24">
           </div>
-          <div class="field">خصم بالنسبة %
-            <input id="fDisc" type="number" inputmode="decimal" min="0" max="90" placeholder="مثلاً 10">
-          </div>
         </div>
-        <p class="hint">الخصم ينطبق على كل الأسعار (الحبة والدستة والصندوق).</p>
+        <div class="field">خصم بالنسبة %
+          <input id="fDisc" type="number" inputmode="decimal" min="0" max="90" placeholder="مثلاً 10">
+        </div>
+        <p class="hint">الخصم ينطبق على كل الأسعار (القطعة والدستة والصندوق).</p>
       </details>
       <div class="field">القسم
         <select id="fCat"></select>
@@ -269,7 +272,7 @@
     id: ${q(p.id)},
     name: ${q(p.name || "")},
     price: ${Number(p.price) || 0},
-    oldPrice: ${Number(p.oldPrice) || 0},${Number(p.dozenPrice) > 0 ? `\n    dozenPrice: ${Number(p.dozenPrice)},` : ""}${Number(p.boxPrice) > 0 ? `\n    boxPrice: ${Number(p.boxPrice)},` : ""}${Number(p.boxCount) > 0 ? `\n    boxCount: ${Number(p.boxCount)},` : ""}${Number(p.discount) > 0 ? `\n    discount: ${Number(p.discount)},` : ""}
+    oldPrice: ${Number(p.oldPrice) || 0},${Number(p.dozenPrice) > 0 ? `\n    dozenPrice: ${Number(p.dozenPrice)},` : ""}${Number(p.dozenCount) > 0 ? `\n    dozenCount: ${Number(p.dozenCount)},` : ""}${Number(p.boxPrice) > 0 ? `\n    boxPrice: ${Number(p.boxPrice)},` : ""}${Number(p.boxCount) > 0 ? `\n    boxCount: ${Number(p.boxCount)},` : ""}${Number(p.discount) > 0 ? `\n    discount: ${Number(p.discount)},` : ""}
     category: ${q(p.category || "")},${p.sub ? `\n    sub: ${q(p.sub)},` : ""}
     images: ${q(p.images || [])},
     description: ${q(p.description || "")},
@@ -382,6 +385,7 @@ ${products}
         id, name, price,
         oldPrice: parseFloat($("fOld").value) || 0,
         dozenPrice: parseFloat($("fDozen").value) || 0,
+        dozenCount: parseInt($("fDozenCount").value) || 0,
         boxPrice: parseFloat($("fBox").value) || 0,
         boxCount: parseInt($("fBoxCount").value) || 0,
         discount: Math.min(parseFloat($("fDisc").value) || 0, 90),
@@ -411,7 +415,7 @@ ${products}
     editing = -1;
     pics = [];
     showPics();
-    ["fName", "fPrice", "fOld", "fDesc", "fDozen", "fBox", "fBoxCount", "fDisc"].forEach(id => $(id).value = "");
+    ["fName", "fPrice", "fOld", "fDesc", "fDozen", "fDozenCount", "fBox", "fBoxCount", "fDisc"].forEach(id => $(id).value = "");
     $("extra").open = false;
     $("fNew").checked = true;
     $("fOut").checked = false;
@@ -455,6 +459,7 @@ ${products}
       $("fPrice").value = p.price;
       $("fOld").value = p.oldPrice || "";
       $("fDozen").value = p.dozenPrice || "";
+      $("fDozenCount").value = p.dozenCount || "";
       $("fBox").value = p.boxPrice || "";
       $("fBoxCount").value = p.boxCount || "";
       $("fDisc").value = p.discount || "";
