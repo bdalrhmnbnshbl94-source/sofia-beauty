@@ -115,6 +115,8 @@ const PRODUCTS = [
     name: "مصفف شعر هومر  مع فرشاة 062",
     price: 173,
     oldPrice: 0,
+    boxPrice: 2076,
+    boxCount: 12,
     category: "مصففات الشعر",
     images: ["p1792692840462-1.jpg"],
     description: "مصفف شعر مع فرشاة مزود بغلاف من السيراميك ، عنصر تسخين من اللدائن وسلك كهربائي دوار",
