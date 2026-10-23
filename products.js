@@ -154,6 +154,8 @@ const PRODUCTS = [
     name: "مصفف شعر 057",
     price: 177,
     oldPrice: 0,
+    boxPrice: 4248,
+    boxCount: 24,
     category: "مصففات الشعر",
     images: ["p1792693846435-1.jpg"],
     description: "مصفف شعر بالواح من السيراميك و 230 درجة مئوية و 57 واط",
