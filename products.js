@@ -228,4 +228,18 @@ const PRODUCTS = [
     isNew: false,
     soldOut: false,
   },
+  {
+    id: "p1793000915674",
+    name: "مجفف شعر كي تي سي 300",
+    price: 190,
+    oldPrice: 0,
+    boxPrice: 2280,
+    boxCount: 12,
+    category: "مجففات الشعر",
+    sub: "كي تي سي",
+    images: ["p1793000913580-1.jpg"],
+    description: "مجفف شعر كي تي سي 3000 واط",
+    isNew: false,
+    soldOut: false,
+  },
 ];
