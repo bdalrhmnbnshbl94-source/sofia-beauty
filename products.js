@@ -256,4 +256,18 @@ const PRODUCTS = [
     isNew: false,
     soldOut: false,
   },
+  {
+    id: "p1793002390276",
+    name: "مجفف شعر كي تي سي 240",
+    price: 175,
+    oldPrice: 0,
+    boxPrice: 2100,
+    boxCount: 12,
+    category: "مجففات الشعر",
+    sub: "كي تي سي",
+    images: ["p1793002387805-1.jpg"],
+    description: "مجفف شعر كي تي سي 2400 واط",
+    isNew: false,
+    soldOut: false,
+  },
 ];
