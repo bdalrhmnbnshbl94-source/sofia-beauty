@@ -252,7 +252,7 @@ const PRODUCTS = [
     category: "مجففات الشعر",
     sub: "كي تي سي",
     images: ["p1793002329155-1.jpg"],
-    description: "مجفف شعر كي تي سي 2400",
+    description: "مجفف شعر كي تي سي 2400 واط",
     isNew: false,
     soldOut: false,
   },
