@@ -147,7 +147,7 @@ const PRODUCTS = [
     images: ["p1792693563151-1.jpg"],
     description: "مصفف شعر بألواح من السيراميك و 230 درجة مئوية و 50 واط",
     isNew: false,
-    soldOut: true,
+    soldOut: false,
   },
   {
     id: "p1792693849565",
