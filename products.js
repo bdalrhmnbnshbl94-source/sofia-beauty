@@ -167,7 +167,7 @@ const PRODUCTS = [
     name: "ماكينة حلاقة شحن تحديد 010",
     price: 125,
     oldPrice: 0,
-    boxPrice: 1200,
+    boxPrice: 1000,
     boxCount: 8,
     category: "ماكينات حلاقة",
     images: ["p1792694048146-1.jpg"],
