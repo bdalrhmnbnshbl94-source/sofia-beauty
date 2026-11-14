@@ -165,7 +165,7 @@ const PRODUCTS = [
   {
     id: "p1792694051124",
     name: "ماكينة حلاقة شحن تحديد 010",
-    price: 150,
+    price: 125,
     oldPrice: 0,
     boxPrice: 1200,
     boxCount: 8,
